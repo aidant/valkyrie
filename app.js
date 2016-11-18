@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const request = require('request');
 const settings = require('./settings.json');
 
-client.on('ready', () => {  
+client.on('ready', () => {
   console.log('Valkyrie online.');
   client.user.setStatus('dnd');
   client.user.setGame('val help');
@@ -13,7 +13,7 @@ var prefix = 'val';
 
 client.on('message', message => {
   msg = message.content.split(' ');
-  //begins the search 
+  //begins the search
   if (msg.slice(0,1) == prefix) {
     //val
     if (msg.slice(1,2) == '') {
@@ -78,7 +78,7 @@ client.on('message', message => {
             }
             message.channel.sendMessage('', { embed })
           } else {
-            console.log(body) 
+            console.log(body)
             message.channel.sendMessage('I require medical attention. \n```' + body.error + '```')
           }
       })
