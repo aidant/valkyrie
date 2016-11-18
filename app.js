@@ -9,15 +9,15 @@ client.on('ready', () => {
   client.user.setGame('val help');
 });
 
-var prefix = 'val';
+const prefix = 'val';
 
 client.on('message', message => {
-  msg = message.content.split(' ');
+  const msg = message.content.split(' ');
   //begins the search
   if (msg.slice(0,1) == prefix) {
     //val
     if (msg.slice(1,2) == '') {
-      message.channel.sendMessage('Did someone call a doctor?')
+      message.channel.sendMessage('Did someone call a doctor?');
     }
     //val invite
     if (msg.slice(1,2) == 'invite') {
@@ -31,7 +31,7 @@ client.on('message', message => {
           {name: 'Invite', value: 'Info: Generates an invite link', inline: true}
         ], footer: {text: 'Built by LazyGamer#7000'}
       };
-      message.channel.sendMessage('', { embed })
+      message.channel.sendMessage('', { embed });
     }
     //val help stats
     if (msg.slice(1,2) == 'help' && msg.slice(2,3) == 'stats') {
@@ -46,18 +46,16 @@ client.on('message', message => {
     }
     //val stats
     if (msg.slice(1,2) == 'stats') {
-      message.channel.sendMessage('I\'ve got you.')
+      message.channel.sendMessage('I\'ve got you.');
 
-      var battletag = message.content.replace('#', '-').split(' ').slice(2,3)
+      const battletag = message.content.replace('#', '-').split(' ').slice(2,3);
+      let platform = 'pc';
+      let region = 'us';
       if (message.content.replace('#', '-').split(' ').slice(3,4) != '') {
-        var platform = message.content.replace('#', '-').split(' ').slice(3,4)
-      } else {
-        var platform = 'pc'
+        platform = message.content.replace('#', '-').split(' ').slice(3,4);
       }
       if (message.content.replace('#', '-').split(' ').slice(4,5) != '') {
-        var region = message.content.replace('#', '-').split(' ').slice(4,5)
-      } else {
-        var region = 'us'
+        region = message.content.replace('#', '-').split(' ').slice(4,5);
       }
 
       request({url: 'https://api.lootbox.eu/' + platform + '/' + region + '/' + battletag + '/profile', json: true }, function (error, response, body) {
@@ -76,7 +74,7 @@ client.on('message', message => {
                 {name: 'Time played in QP', value: body.data.playtime.quick, inline: true}
               ], timestamp: new Date(), footer: { icon_url: body.data.competitive.rank_img, text: 'Stats as of '}
             }
-            message.channel.sendMessage('', { embed })
+            message.channel.sendMessage('', { embed });
           } else {
             console.log(body)
             message.channel.sendMessage('I require medical attention. \n```' + body.error + '```')
