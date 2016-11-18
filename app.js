@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const request = require('request');
-const settings = require('./settings.json');
+const settings = require('./config/env');
 
 client.on('ready', () => {
   console.log('Valkyrie online.');
@@ -86,4 +86,10 @@ client.on('message', message => {
   }
   console.log(msg);
 });
+
+if (!settings.token) {
+  console.error('Please configure a discord login token.');
+  process.exit(1);
+}
+
 client.login(settings.token);
