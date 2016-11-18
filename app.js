@@ -9,26 +9,26 @@ client.on('ready', () => {
   client.user.setGame('val help');
 });
 
-const prefix = 'val';
+const command = 'val';
 
 client.on('message', message => {
   //init command
   let msg = message.content.split(' ').reverse();
-  let command = msg.pop();
-  if (command === prefix) {
-    let arg1 = msg.pop();
+  let prefix = msg.pop();
+  if (prefix === command) {
+    let argument = msg.pop();
     //val
-    if (!arg1) {
+    if (!argument) {
       message.channel.sendMessage('Did someone call a doctor?');
     }
     //val invite
-    if (arg1 === 'invite') {
+    if (argument === 'invite') {
       message.channel.sendMessage('Support has arrived.\nhttps://discordapp.com/oauth2/authorize?permissions=67226688&scope=bot&client_id=248780846201438209')
     }
     //val help
-    if (arg1 === 'help') {
-      let arg2 = msg.pop();
-      if (!arg2) {
+    if (argument === 'help') {
+      let sub_command = msg.pop();
+      if (!sub_command) {
         let embed = { color: 15746887, author: {name: 'Usage: val command argument'}, url: 'http://overcomp.akira.gg/',
           fields: [
             {name: 'Stats', value: 'Arguments: Battle#Tag/@User Platform Region', inline: true},
@@ -38,7 +38,7 @@ client.on('message', message => {
         message.channel.sendMessage('', { embed });
       }
       //val help stats
-      if (arg2 === 'stats'){
+      if (sub_command === 'stats'){
         let embed = { color: 15746887, author: {name: 'Usage: val stats User Platform Region'}, url: 'http://overcomp.akira.gg/',
           fields: [
             {name: 'User', value: 'Can be a BattleTag or discord user', inline: true},
@@ -50,7 +50,7 @@ client.on('message', message => {
       }
     }
     //val stats
-    if (arg1 === 'stats') {
+    if (argument === 'stats') {
       message.channel.sendMessage('I\'ve got you.');
       let battletag = msg.pop();
       if (!battletag) {
