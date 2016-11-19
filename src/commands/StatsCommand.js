@@ -34,9 +34,21 @@ export default function statsCommand(context, message) {
   request(query, (error, response, body) => {
     const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
     if (success) {
-      let COLOUR = rankColour(body.data.competitive.rank_img);
+
+      let comp_rank = 'unranked';
+      let comp_winrate = 'n/a';
+      let comp_playtime = 'n/a';
+
+      if (body.data.competitive.rank !== null) {
+
+        comp_rank = body.data.competitive.rank;
+        comp_winrate = Math.round(body.data.games.competitive.wins / body.data.games.competitive.played * 100) + '%';
+        comp_playtime = body.data.playtime.competitive;
+      }
+
+      let colour = rankColour(body.data.competitive.rank_img);
       let embed = {
-        color: COLOUR,
+        color: colour,
         author: { name: body.data.username, icon_url: body.data.avatar },
         title: `${body.data.username}'s PlayOverwatch Stats`,
         url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${battleTag}`,
@@ -44,17 +56,17 @@ export default function statsCommand(context, message) {
         fields: [
           {
             name: 'Skill Rating',
-            value: body.data.competitive.rank,
+            value: comp_rank,
             inline: true
           },
           {
             name: 'Competitive win rate',
-            value: Math.round(body.data.games.competitive.wins / body.data.games.competitive.played * 100) + '%',
+            value:  comp_winrate,
             inline: true
           },
           {
             name: 'Time played in Comp',
-            value: body.data.playtime.competitive,
+            value: comp_playtime,
             inline: true
           },
           {
@@ -76,6 +88,8 @@ export default function statsCommand(context, message) {
         timestamp: new Date(),
         footer: { icon_url: body.data.competitive.rank_img, text: 'Stats as of '}
       }
+      console.log(embed);
+      console.log(body);
       message.channel.sendMessage('', { embed });
     } else {
       console.log(body);
