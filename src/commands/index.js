@@ -5,8 +5,8 @@ import HelpStatsCommand from './HelpStatsCommand';
 import HelpHelpCommand from './HelpHelpCommand';
 import InviteCommand from './InviteCommand';
 import StatsCommand from './StatsCommand';
+import StoreCommand from './StoreCommand';
 import HeroStatsCommand from './HeroStatsCommand';
-import TestCommand from './TestCommand';
 
 const router = new CommandRouter();
 router
@@ -31,12 +31,12 @@ router
     handler: StatsCommand,
   })
   .add({
-    command: ['hero'],
-    handler: HeroStatsCommand,
+    command: ['store'],
+    handler: StoreCommand,
   })
   .add({
-    command: ['help', 'test'],
-    handler: TestCommand,
+    command: ['hero'],
+    handler: HeroStatsCommand,
   })
 
 export default router;

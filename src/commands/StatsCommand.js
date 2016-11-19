@@ -1,6 +1,7 @@
 import request from 'request';
 import settings from '../../config/env';
-import { validateBattleTag, validateRegion, validatePlatform } from '../utils/validation';
+import { validateBattleTag, validateRegion, validatePlatform } from '../utils/Validation';
+import { rankColour } from '../utils/RankColour';
 
 export default function statsCommand(context, message) {
   message.channel.sendMessage('I\'ve got you.');
@@ -11,7 +12,7 @@ export default function statsCommand(context, message) {
   }
 
   if (!validateBattleTag(battleTag)) {
-    message.channel.sendMessage(`I require medical attention. \nNo Valid BattleTag Provided. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
+    message.channel.sendMessage(`I require medical attention. \nNo valid BattleTag provided. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
     return;
   }
 
@@ -33,8 +34,9 @@ export default function statsCommand(context, message) {
   request(query, (error, response, body) => {
     const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
     if (success) {
+      let COLOUR = rankColour(body.data.competitive.rank_img);
       let embed = {
-        color: 16426522,
+        color: COLOUR,
         author: { name: body.data.username, icon_url: body.data.avatar },
         title: `${body.data.username}'s PlayOverwatch Stats`,
         url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${battleTag}`,
