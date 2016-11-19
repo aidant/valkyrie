@@ -2,6 +2,7 @@ import CommandRouter from '../CommandRouter';
 
 import HelpCommand from './HelpCommand';
 import HelpStatsCommand from './HelpStatsCommand';
+import HelpHelpCommand from './HelpHelpCommand';
 import InviteCommand from './InviteCommand';
 import StatsCommand from './StatsCommand';
 import HeroStatsCommand from './HeroStatsCommand';
@@ -16,6 +17,10 @@ router
   .add({
     command: ['help', 'stats'],
     handler: HelpStatsCommand,
+  })
+  .add({
+    command: ['help', 'help'],
+    handler: HelpHelpCommand,
   })
   .add({
     command: ['invite'],
