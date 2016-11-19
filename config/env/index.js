@@ -5,6 +5,7 @@ const config = require(`./${env}`)
 
 const defaults = {
   token: false,
+  activator: 'val',
 };
 
 export default Object.assign(defaults, config);
