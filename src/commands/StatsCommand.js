@@ -1,6 +1,6 @@
 import request from 'request';
 
-export default function inviteCommand(context, message) {
+export default function statsCommand(context, message) {
   message.channel.sendMessage('I\'ve got you.');
 
   let battleTag = context.params.shift();
@@ -10,8 +10,22 @@ export default function inviteCommand(context, message) {
 
   battleTag = battleTag.replace('#', '-');
 
+  const valid_regions = ['eu', 'us', 'kr', 'cn'];
+  const valid_platforms = ['pc', 'xbl', 'psn'];
   const platform = context.params.shift() || 'pc';
   const region = context.params.shift() || 'us';
+
+  if (!valid_regions.includes(region) || !valid_platforms.includes(platform)){
+    message.channel.sendMessage('I require medical attention. \nType `val help stats` for info on how to use this comamnd.');
+    return
+  };
+
+  const battleTag_RegEx = /^[a-zA-Z0-9]+#[0-9]{4,5}$/
+  if (battleTag_RegEx.test(battleTag)) {
+    message.channel.sendMessage('triggerd');
+    console.log('triggerd');
+    return
+  }
 
   const query = {
     url: `https://api.lootbox.eu/${platform}/${region}/${battleTag}/profile`,
@@ -68,7 +82,7 @@ export default function inviteCommand(context, message) {
       message.channel.sendMessage('', { embed });
     } else {
       console.log(body);
-      message.channel.sendMessage('I require medical attention. \n```' + body.error + '```')
+      message.channel.sendMessage('I require medical attention. \n```' + body.error + '```');
     }
   });
 }

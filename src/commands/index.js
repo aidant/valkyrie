@@ -4,6 +4,7 @@ import HelpCommand from './HelpCommand';
 import HelpStatsCommand from './HelpStatsCommand';
 import InviteCommand from './InviteCommand';
 import StatsCommand from './StatsCommand';
+import HeroStatsCommand from './HeroStatsCommand';
 import TestCommand from './TestCommand';
 
 const router = new CommandRouter();
@@ -23,6 +24,10 @@ router
   .add({
     command: ['stats'],
     handler: StatsCommand,
+  })
+  .add({
+    command: ['hero'],
+    handler: HeroStatsCommand,
   })
   .add({
     command: ['help', 'test'],

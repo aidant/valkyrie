@@ -21,7 +21,7 @@ client.on('message', message => {
 
   const command = commands.route(parts);
   if (!command) {
-    message.channel.sendMessage('Did someone call a doctor?');
+    message.channel.sendMessage('Did someone call for a witch?');
     return;
   }
 
