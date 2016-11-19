@@ -41,6 +41,7 @@ build/Release
 # Dependency directory
 node_modules
 
+# Private Token
 config/env/development.js
 
 # Optional npm cache directory
