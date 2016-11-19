@@ -41,6 +41,12 @@ build/Release
 # Dependency directory
 node_modules
 
+<<<<<<< HEAD
+=======
+# Private Token
+config/env/development.js
+
+>>>>>>> origin/master
 # Optional npm cache directory
 .npm
 
