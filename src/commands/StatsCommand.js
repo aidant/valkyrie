@@ -12,7 +12,7 @@ export default function statsCommand(context, message) {
 
   if (!validateBattleTag(battleTag)) {
     message.channel.sendMessage(`I require medical attention. \nNo Valid BattleTag Provided. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
-    return
+    return;
   }
 
   battleTag = battleTag.replace('#', '-');
@@ -22,7 +22,7 @@ export default function statsCommand(context, message) {
 
   if (!validateRegion(region) || !validatePlatform(platform)){
     message.channel.sendMessage(`I require medical attention. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
-    return
+    return;
   };
 
   const query = {
@@ -31,10 +31,7 @@ export default function statsCommand(context, message) {
   };
 
   request(query, (error, response, body) => {
-    const success = !error &&
-      response.statusCode >= 200 && response.statusCode < 300 &&
-      (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
-
+    const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
     if (success) {
       let embed = {
         color: 16426522,

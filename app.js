@@ -1,4 +1,3 @@
-
 import Discord from 'discord.js';
 import settings from './config/env';
 import commands from './src/commands';
@@ -15,7 +14,7 @@ client.on('message', message => {
   const parts = message.content.split(' ');
   const activator = parts.shift();
 
-  if (activator !== settings.activator) {
+  if (!activator || activator.toLowerCase() !== settings.activator) {
     return;
   }
 
