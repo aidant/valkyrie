@@ -1,8 +1,6 @@
 import request from 'request';
 import settings from '../../config/env';
-const BATTLETAG_REGEX = /^[a-zA-Z0-9]+#[0-9]{4,5}$/;
-const VALID_REGIONS = ['eu', 'us', 'kr', 'cn'];
-const VALID_PLATFORMS = ['pc', 'xbl', 'psn'];
+import { validateBattleTag, validateRegion, validatePlatform } from '../utils/validation';
 
 export default function statsCommand(context, message) {
   message.channel.sendMessage('I\'ve got you.');
@@ -12,7 +10,7 @@ export default function statsCommand(context, message) {
     battleTag = 'LazyGamer#11985';
   }
 
-  if (!BATTLETAG_REGEX.test(battleTag)) {
+  if (!validateBattleTag(battleTag)) {
     message.channel.sendMessage(`I require medical attention. \nNo Valid BattleTag Provided. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
     return
   }
@@ -22,7 +20,7 @@ export default function statsCommand(context, message) {
   const platform = context.params.shift() || 'pc';
   const region = context.params.shift() || 'us';
 
-  if (!VALID_REGIONS.includes(region) || !VALID_PLATFORMS.includes(platform)){
+  if (!validateRegion(region) || !validatePlatform(platform)){
     message.channel.sendMessage(`I require medical attention. \nType \`${settings.activator} help stats\` for info on how to use this comamnd.`);
     return
   };
