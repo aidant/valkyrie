@@ -41,9 +41,10 @@ build/Release
 # Dependency directory
 node_modules
 
+config/env/development.js
+
 # Optional npm cache directory
 .npm
 
 # Optional REPL history
 .node_repl_history
-
