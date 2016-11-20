@@ -1,4 +1,6 @@
 const BATTLETAG_REGEX = /^[a-zA-Z0-9]+#[0-9]{4,5}$/;
+const PSN_REGEX = /^[\w-]{3,16}$/;
+const XBL_REGEX = /^[A-Za-z0-9]{1,15}$/;
 const VALID_MODES = ['quickplay', 'competitive'];
 const VALID_REGIONS = ['eu', 'us', 'kr', 'cn'];
 const VALID_PLATFORMS = ['pc', 'xbl', 'psn'];
@@ -6,6 +8,14 @@ const VALID_HEROS = ['Genji', 'McCree', 'Pharah', 'Reaper', 'Soldier76', 'Sombra
 
 export function validateBattleTag(battleTag) {
   return BATTLETAG_REGEX.test(battleTag);
+}
+
+export function validateOnlineID(onlineID) {
+  return PSN_REGEX.test(onlineID);
+}
+
+export function validateGamerTag(gamerTag) {
+  return XBL_REGEX.test(gamerTag);
 }
 
 export function validateMode(mode) {
