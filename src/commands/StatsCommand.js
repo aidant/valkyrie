@@ -1,35 +1,54 @@
 import request from 'request';
 import settings from '../../config/env';
-import { validateBattleTag, validateRegion, validatePlatform } from '../utils/Validation';
+import { validateBattleTag, validateRegion, validatePlatform, validateOnlineID, validateGamerTag } from '../utils/Validation';
 import { marginColour } from '../utils/Colour';
 import { battleTags } from '../utils/BattleTag';
 
 export default function statsCommand(context, message) {
 
-  let battleTag = context.params.shift();
-  let platform = context.params.shift() || 'pc';
-  let region = context.params.shift() || 'us';
-
-  if (!battleTag) {
-    battleTag = battleTags(message.author.id);
-  }
-
-  if (!validateBattleTag(battleTag)) {
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid BattleTag`);
-    return;
-  }
-
-  battleTag = battleTag.replace('#', '-');
+  let user = context.params.shift();
+  let platform = context.params.shift().toLowerCase() || 'pc';
+  let region = context.params.shift().toLowerCase() || 'us';
 
   if (!validateRegion(region) || !validatePlatform(platform)){
     message.channel.sendMessage(`I require medical attention. \nNo valid platform/region provided.`);
     return;
   };
 
+  if (platform === 'pc') {
+
+    if (!user) {
+      user = battleTags(message.author.id);
+    }
+
+    if (!validateBattleTag(user)) {
+      message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid BattleTag`);
+      return;
+    }
+
+    user = user.replace('#', '-');
+  }
+
+  if (platform === 'psn' && !validateOnlineID(user)) {
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Online ID`);
+    return;
+  }
+
+  if (platform === 'xbl' && !validateGamerTag(user)) {
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Gamertag`);
+    return;
+  }
+
+  let overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${region}/${user}`;
+
+  if (platform === 'psn' || platform === 'xbl') {
+    overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${user}`;
+  }
+
   message.channel.sendMessage('I\'ve got you.');
 
   const query = {
-    url: `https://api.lootbox.eu/${platform}/${region}/${battleTag}/profile`,
+    url: `https://api.lootbox.eu/${platform}/${region}/${user}/profile`,
     json: true
   };
 
@@ -50,7 +69,7 @@ export default function statsCommand(context, message) {
         color: rank_colour,
         author: { name: body.data.username, icon_url: body.data.avatar },
         title: `${body.data.username}'s PlayOverwatch Stats`,
-        url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${battleTag}`,
+        url: overwatch_url,
         description: `Quick summary of ${body.data.username}'s PlayOverwatch stats:`,
         fields: [
           {

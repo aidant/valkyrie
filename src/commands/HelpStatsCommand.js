@@ -6,9 +6,9 @@ export default function helpStatsCommand(context, message) {
     color: marginColour('default'),
     author: { name: 'Help Stats' },
     url: settings.url,
-    description: `${settings.activator} stats BattleTag#1337 psn eu`,
+    description: `${settings.activator} stats BattleTag#1337 pc eu`,
     fields: [
-      { name: 'User', value: 'Must be a valid BattleTag', inline: false },
+      { name: 'User', value: 'Must be a valid BattleTag, Gamertag or Online ID', inline: false },
       { name: 'Platform', value: 'Platforms: pc, xbl, psn \nDeafult: pc ', inline: false },
       { name: 'Region', value: 'Regions: eu, us, kr, cn \nDeafult: us ', inline: false },
     ],
