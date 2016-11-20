@@ -1,20 +1,44 @@
 import request from 'request';
+import settings from '../../config/env';
+import { validateBattleTag, validateRegion, validatePlatform, validateMode, validateHeros } from '../utils/Validation';
+import { marginColour } from '../utils/Colour';
+import { battleTags } from '../utils/BattleTag';
 
 export default function heroStatsCommand(context, message) {
-  message.channel.sendMessage('I\'ve got you.');
 
-  const hero = context.params.shift() || 'Mercy';
-
+  let hero = context.params.shift() || 'Mercy';
+  let mode = context.params.shift() ;
   let battleTag = context.params.shift();
+  let platform = context.params.shift() || 'pc';
+  let region = context.params.shift() || 'us';
+
   if (!battleTag) {
-    battleTag = 'lazyGamer#11985';
+    battleTag = battleTags(message.author.id);
+  }
+
+  if (!validateBattleTag(battleTag)) {
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid BattleTag.`);
+    return;
   }
 
   battleTag = battleTag.replace('#', '-');
 
-  const mode = context.params.shift() || 'quickplay';
-  const platform = context.params.shift() || 'pc';
-  const region = context.params.shift() || 'us';
+  if (!validateMode(mode)){
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid gamemode `);
+    return;
+  };
+
+  if (!validateRegion(region) || !validatePlatform(platform)){
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid platform/region.`);
+    return;
+  };
+
+    if (!validateHeros(hero)){
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Hero.`);
+    return;
+  };
+
+  message.channel.sendMessage('I\'ve got you.');
 
   const query = {
     url: `https://api.lootbox.eu/${platform}/${region}/${battleTag}/${mode}/hero/${hero}/`,
@@ -22,13 +46,12 @@ export default function heroStatsCommand(context, message) {
   };
 
   request(query, (error, response, body) => {
-    const success = !error &&
-      response.statusCode >= 200 && response.statusCode < 300 &&
-      (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
-
+    const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
     if (success) {
+
+      let colour = marginColour('default');
       let embed = {
-        color: 16426522,
+        color: colour,
         author: { name: battleTag },
         title: `${battleTag}'s PlayOverwatch Stats`,
         url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${battleTag}`,

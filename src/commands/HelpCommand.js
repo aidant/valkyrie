@@ -1,20 +1,21 @@
 import settings from '../../config/env';
+import { marginColour } from '../utils/Colour';
 
 export default function helpCommand(context, message) {
   const embed = {
-    color: 15746887,
+    color: marginColour('default'),
     author: { name: `All commands for ${settings.activator}` },
-    url: 'http://overcomp.akira.gg/',
+    url: settings.url,
     description: `Example: ${settings.activator} invite`,
     fields: [
-      { name: 'Help', value: 'Info on how to use the command provided', inline: false},
+      { name: 'Help', value: `Example: ${settings.activator} Help Stats`, inline: false},
       { name: 'Stats', value: 'General Overwatch stats', inline: false },
       { name: 'Invite', value: 'Generates an invite link', inline: false },
-      { name: 'Hero', value: 'Overwatch hero specific stats', inline: false },
-      { name: 'Patch', value: 'Current Overwatch Patch Notes', inline: false },
-      { name: 'Store', value: 'Stores a users BattleTag', inline: false }
+      { name: 'Hero', value: '**WIP** ~~Overwatch hero specific stats~~', inline: false },
+      { name: 'Patch', value: '**WIP** ~~Current Overwatch Patch Notes~~', inline: false },
+      { name: 'Remember', value: 'I\'ll remember your BattleTag Platform and Region', inline: false }
     ],
-    footer: { text: 'Built by LazyGamer & AkiraYasha' },
+    footer: { text: settings.footer }
   };
   message.channel.sendMessage('', { embed });
 }
