@@ -11,8 +11,8 @@ export default function helpCommand(context, message) {
       { name: 'Help', value: `Example: ${settings.activator} Help Stats`, inline: false},
       { name: 'Stats', value: 'General Overwatch stats', inline: false },
       { name: 'Invite', value: 'Generates an invite link', inline: false },
-      { name: 'Hero', value: '**WIP** ~~Overwatch hero specific stats~~', inline: false },
-      { name: 'Patch', value: '**WIP** ~~Current Overwatch Patch Notes~~', inline: false },
+      //{ name: 'Hero', value: '**WIP** ~~Overwatch hero specific stats~~', inline: false },
+      //{ name: 'Patch', value: '**WIP** ~~Current Overwatch Patch Notes~~', inline: false },
       { name: 'Remember', value: 'I\'ll remember your BattleTag Platform and Region', inline: false }
     ],
     footer: { text: settings.footer }
