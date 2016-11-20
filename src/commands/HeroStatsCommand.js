@@ -1,47 +1,25 @@
 import request from 'request';
 import settings from '../../config/env';
-import { validateBattleTag, validateRegion, validatePlatform, validateMode, validateHeros } from '../utils/Validation';
+import { validateHeros } from '../utils/Validation';
+import { checkStatsInput } from '../utils/checkInput';
 import { marginColour } from '../utils/Colour';
-import { battleTags } from '../utils/BattleTag';
 
-export default function heroStatsCommand(context, message) {
+export default function statsCommand(context, message) {
 
-  let hero = context.params.shift() || 'Mercy';
-  let mode = context.params.shift() ;
-  let battleTag = context.params.shift();
-  let platform = context.params.shift() || 'pc';
-  let region = context.params.shift() || 'us';
+  let hero = context.params.shift();
+  let mode = context.params.shift();
+  let userInput = checkStatsInput(context, message);
+  let user = userInput.user;
+  let platform = userInput.platform;
+  let region = userInput.region;
+  let overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${region}/${user}`;
 
-  if (!battleTag) {
-    battleTag = battleTags(message.author.id);
-  }
-
-  if (!validateBattleTag(battleTag)) {
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid BattleTag.`);
-    return;
-  }
-
-  battleTag = battleTag.replace('#', '-');
-
-  if (!validateMode(mode)){
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid gamemode `);
-    return;
+  if (platform === 'psn' || platform === 'xbl') {
+    overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${user}`;
   };
-
-  if (!validateRegion(region) || !validatePlatform(platform)){
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid platform/region.`);
-    return;
-  };
-
-    if (!validateHeros(hero)){
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Hero.`);
-    return;
-  };
-
-  message.channel.sendMessage('I\'ve got you.');
 
   const query = {
-    url: `https://api.lootbox.eu/${platform}/${region}/${battleTag}/${mode}/hero/${hero}/`,
+    url: `https://api.lootbox.eu/${platform}/${region}/${user}/${mode}/hero/${hero}/`,
     json: true
   };
 
@@ -52,10 +30,10 @@ export default function heroStatsCommand(context, message) {
       let colour = marginColour('default');
       let embed = {
         color: colour,
-        author: { name: battleTag },
-        title: `${battleTag}'s PlayOverwatch Stats`,
-        url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${battleTag}`,
-        description: `Quick summary of ${battleTag}'s PlayOverwatch stats:`,
+        author: { name: user },
+        title: `${user}'s PlayOverwatch Stats`,
+        url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${user}`,
+        description: `Quick summary of ${user}'s PlayOverwatch stats:`,
         fields: [
           {
             name: 'Time Played',
