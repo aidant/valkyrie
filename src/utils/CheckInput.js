@@ -6,11 +6,10 @@ export function checkStatsInput(context, message) {
   let user = context.params.shift();
   let platform = context.params.shift() || 'pc';
   let region = context.params.shift() || 'us';
-  let result = false;
 
   if (!validateRegion(region) || !validatePlatform(platform)){
     message.channel.sendMessage(`I require medical attention. \nNo valid platform/region provided.`);
-    return { result };
+    return false;
   };
 
   if (platform === 'pc') {
@@ -21,7 +20,7 @@ export function checkStatsInput(context, message) {
 
     if (!validateBattleTag(user)) {
       message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid BattleTag.`);
-      return { result };
+      return false;
     };
 
     user = user.replace('#', '-');
@@ -29,32 +28,27 @@ export function checkStatsInput(context, message) {
 
   if (platform === 'psn' && !validateOnlineID(user)) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Online ID.`);
-    return { result };
+    return false;
   };
 
   if (platform === 'xbl' && !validateGamerTag(user)) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Gamertag.`);
-    return { result };
+    return false;
   };
 
-  result = true;
-  return { user, platform, region, result };
+  return { user, platform, region };
 };
 
 export function checkHeroInput(hero, mode, message) {
 
-  let result = false;
-
   if (!validateHeros(hero)) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Hero.`);
-    return { result };
+    return false;
   };
 
   if (!validateMode(mode)) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Gamemode.`);
-    return { result };
+    return false;
   };
-
-  result = true;
-  return { result };
+  return true;
 };
