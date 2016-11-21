@@ -7,7 +7,7 @@ export default function statsCommand(context, message) {
 
   let userInput = checkStatsInput(context, message);
 
-  if (userInput.result === false) {
+  if (!userInput) {
     return;
   }
 
