@@ -10,7 +10,7 @@ export default function statsCommand(context, message) {
   let userInput = checkStatsInput(context, message);
   let userInputHeros = checkHeroInput(hero, mode, message);
 
-  if (userInput.result === false || userInputHeros.result === false) {
+  if (!userInput || !userInputHeros) {
     return;
   }
 
