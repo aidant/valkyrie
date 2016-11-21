@@ -4,9 +4,6 @@ import { marginColour } from '../utils/Colour';
 export default function helpStatsCommand(context, message) {
   const embed = {
     color: marginColour('default'),
-    author: { name: 'Help Stats' },
-    url: settings.url,
-    description: `${settings.activator} stats BattleTag#1337 pc eu`,
     fields: [
       { name: 'User', value: 'Must be a valid BattleTag, Gamertag or Online ID', inline: false },
       { name: 'Platform', value: 'Platforms: pc, xbl, psn \nDeafult: pc ', inline: false },
