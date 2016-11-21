@@ -7,6 +7,10 @@ export default function statsCommand(context, message) {
 
   let userInput = checkStatsInput(context, message);
 
+  if (userInput.result === false) {
+    return;
+  }
+
   let user = userInput.user;
   let platform = userInput.platform;
   let region = userInput.region;
@@ -20,6 +24,8 @@ export default function statsCommand(context, message) {
     url: `https://api.lootbox.eu/${platform}/${region}/${user}/profile`,
     json: true
   };
+
+  message.channel.sendMessage('I\'ve got you.');
 
   request(query, (error, response, body) => {
     const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));

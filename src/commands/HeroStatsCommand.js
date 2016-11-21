@@ -1,7 +1,6 @@
 import request from 'request';
 import settings from '../../config/env';
-import { validateHeros } from '../utils/Validation';
-import { checkStatsInput } from '../utils/checkInput';
+import { checkStatsInput, checkHeroInput } from '../utils/checkInput';
 import { marginColour } from '../utils/Colour';
 
 export default function statsCommand(context, message) {
@@ -9,6 +8,12 @@ export default function statsCommand(context, message) {
   let hero = context.params.shift();
   let mode = context.params.shift();
   let userInput = checkStatsInput(context, message);
+  let userInputHeros = checkHeroInput(hero, mode, message);
+
+  if (userInput.result === false || userInputHeros.result === false) {
+    return;
+  }
+
   let user = userInput.user;
   let platform = userInput.platform;
   let region = userInput.region;
@@ -22,6 +27,8 @@ export default function statsCommand(context, message) {
     url: `https://api.lootbox.eu/${platform}/${region}/${user}/${mode}/hero/${hero}/`,
     json: true
   };
+
+  message.channel.sendMessage('I\'ve got you.');
 
   request(query, (error, response, body) => {
     const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
