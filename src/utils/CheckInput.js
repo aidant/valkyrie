@@ -6,6 +6,8 @@ export function checkStatsInput(context, message) {
   let user = context.params.shift();
   let platform = context.params.shift() || 'pc';
   let region = context.params.shift() || 'us';
+  platform = platform.toLowerCase();
+  region = region.toLowerCase();
 
   if (!validateRegion(region) || !validatePlatform(platform)){
     message.channel.sendMessage(`I require medical attention. \nNo valid platform/region provided.`);
@@ -39,16 +41,14 @@ export function checkStatsInput(context, message) {
   return { user, platform, region };
 };
 
-export function checkHeroInput(hero, mode, message) {
+export function checkHeroInput(mode, message) {
 
-  if (!validateHeros(hero)) {
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Hero.`);
-    return false;
-  };
+  mode = mode.replace('qp', 'quickplay');
+  mode = mode.replace('comp', 'competitive');
 
   if (!validateMode(mode)) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Gamemode.`);
     return false;
   };
-  return true;
+  return { mode };
 };

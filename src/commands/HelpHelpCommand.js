@@ -8,6 +8,6 @@ const HELP = [
 'Immer unterbricht mich jemand bei der Arbeit.'
 ]
 
-export default function helpHelpCommand(command, message) {
+export default function helpHelpCommand(context, message) {
   message.channel.sendMessage(HELP[Math.floor(Math.random()*HELP.length)]);
 }

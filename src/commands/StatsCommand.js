@@ -43,9 +43,9 @@ export default function statsCommand(context, message) {
       let embed = {
         color: rank_colour,
         author: { name: body.data.username, icon_url: body.data.avatar },
-        title: `${body.data.username}'s PlayOverwatch Stats`,
+        title: `${body.data.username}'s Overwatch stats`,
         url: overwatch_url,
-        description: `Quick summary of ${body.data.username}'s PlayOverwatch stats:`,
+        description: `Quick summary of ${body.data.username}'s Overwatch stats:`,
         fields: [
           {
             name: 'Skill Rating',
@@ -79,7 +79,7 @@ export default function statsCommand(context, message) {
           }
         ],
         timestamp: new Date(),
-        footer: { icon_url: body.data.competitive.rank_img, text: 'Stats as of '}
+        footer: { icon_url: body.data.competitive.rank_img, text: 'Valkyrie '}
       }
       message.channel.sendMessage('', { embed });
     } else {
