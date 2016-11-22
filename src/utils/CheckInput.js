@@ -41,7 +41,7 @@ export function checkStatsInput(context, message) {
   return { user, platform, region };
 };
 
-export function checkHeroInput(mode, message) {
+export function checkGamemodeInput(mode, message) {
 
   if (!mode) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a gamemode.`);
