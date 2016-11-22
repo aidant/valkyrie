@@ -43,17 +43,11 @@ export function checkStatsInput(context, message) {
 
 export function checkHeroInput(mode, message) {
 
-  if (!mode) {
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a gamemode.`);
-    return false;
-  }
-
-  mode = mode.toLowerCase();
   mode = mode.replace('qp', 'quickplay');
   mode = mode.replace('comp', 'competitive');
 
   if (!validateMode(mode)) {
-    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid gamemode.`);
+    message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a valid Gamemode.`);
     return false;
   };
   return { mode };
