@@ -12,4 +12,4 @@ export default function helpStatsCommand(context, message) {
     footer: { text: settings.footer }
   };
   message.channel.sendMessage('', { embed });
-}
+};
