@@ -11,7 +11,7 @@ export default function statsCommand(context, message) {
 
   if (!userInput || !userInputMode) {
     return;
-  }
+  };
 
   mode = userInputMode.mode;
   let user = userInput.user;
@@ -27,7 +27,6 @@ export default function statsCommand(context, message) {
     url: `https://api.lootbox.eu/${platform}/${region}/${user}/${mode}/heroes`,
     json: true
   };
-  console.log(query)
 
   message.channel.sendMessage('I\'ve got you.');
 
@@ -43,22 +42,28 @@ export default function statsCommand(context, message) {
       for (let i = 0; i < 6; i++) {
         const hero = body[i];
         let heroName = hero.name;
-        heroName = heroName.replace('Torbj&#xF6;rn', 'Torbjörn');
-        heroName = heroName.replace('L&#xFA;cio', 'Lúcio');
+
+        if (heroName === 'Torbj&#xF6;rn') {
+          heroName = 'Torbjörn';
+        };
+
+        if (heroName === 'L&#xFA;cio') {
+          heroName = 'Lúcio';
+        };
 
         fields.push({
           name: heroName,
           value: hero.playtime,
           inline: true
         });
-      }
+      };
 
       let embed = {
         color: colour,
         author: { name: name, icon_url: body[0].image },
-        title: `${name}'s Overwatch stats`,
-        url: `https://playoverwatch.com/en-us/career/${platform}/${region}/${user}`,
-        description: `Quick summary of ${name}'s Hero stats:`,
+        title: `${name}'s Play Overwatch page.`,
+        url: overwatch_url,
+        description: `${name}'s most played Heroes:`,
         fields: fields,
         timestamp: new Date(),
         footer: {text: 'Valkyrie '}

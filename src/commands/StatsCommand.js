@@ -38,7 +38,7 @@ export default function statsCommand(context, message) {
 
       if (!body.data.games.competitive.played) {
         comp_winrate = 'N/A';
-      }
+      };
 
       let embed = {
         color: rank_colour,
@@ -85,6 +85,6 @@ export default function statsCommand(context, message) {
     } else {
       console.log(body);
       message.channel.sendMessage('I require medical attention. \n```' + body.error + '```');
-    }
+    };
   });
-}
+};

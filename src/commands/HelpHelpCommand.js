@@ -6,8 +6,8 @@ const HELP = [
 'Take two, and call me in the morning.',
 'The prognosis is not good.',
 'Immer unterbricht mich jemand bei der Arbeit.'
-]
+];
 
 export default function helpHelpCommand(context, message) {
   message.channel.sendMessage(HELP[Math.floor(Math.random()*HELP.length)]);
-}
+};

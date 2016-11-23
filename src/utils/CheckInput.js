@@ -46,7 +46,7 @@ export function checkGamemodeInput(mode, message) {
   if (!mode) {
     message.channel.sendMessage(`I require medical attention. \nI can\'t do anything without a gamemode.`);
     return false;
-  }
+  };
 
   mode = mode.toLowerCase();
   mode = mode.replace('qp', 'quickplay');

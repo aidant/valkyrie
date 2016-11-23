@@ -3,11 +3,11 @@ import CommandRouter from '../CommandRouter';
 import HelpCommand from './HelpCommand';
 import HelpStatsCommand from './HelpStatsCommand';
 import HelpHelpCommand from './HelpHelpCommand';
+import HelpHeroesCommand from './helpHeroesCommand';
 import InviteCommand from './InviteCommand';
 import StatsCommand from './StatsCommand';
 import StoreCommand from './StoreCommand';
 import HeroesCommand from './HeroesCommand';
-import PatchCommand from './PatchCommand';
 
 const router = new CommandRouter();
 router
@@ -24,6 +24,10 @@ router
     handler: HelpHelpCommand,
   })
   .add({
+    command: ['help', 'heroes'],
+    handler: HelpHeroesCommand,
+  })
+  .add({
     command: ['invite'],
     handler: InviteCommand,
   })
@@ -32,16 +36,12 @@ router
     handler: StatsCommand,
   })
   .add({
-    command: ['stats', 'heroes'],
+    command: ['heroes'],
     handler: HeroesCommand,
   })
   .add({
     command: ['store'],
     handler: StoreCommand,
-  })
-    .add({
-    command: ['patch'],
-    handler: PatchCommand,
   })
 
 export default router;
