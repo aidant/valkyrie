@@ -8,7 +8,4 @@ export default function storeCommand(context, message) {
     message.channel.sendMessage('I require medical attention. \nI can\'t do anything without a valid BattleTag');
     return;
   }
-
-  console.log(battleTag);
-  console.log(message.author.id);
 }
