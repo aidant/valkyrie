@@ -1,29 +1,38 @@
 import { validateBattleTag } from '../utils/Validation';
+import { checkStatsInput } from '../utils/checkInput';
 var Datastore = require('nedb')
-  , db = new Datastore({ filename: 'BattleTags.db', autoload: true });
+  , db = new Datastore({ filename: 'BattleTags.json', autoload: true });
 
 
 export default function storeCommand(context, message) {
 
-  let battleTag = context.params.shift();
+  let userInput = checkStatsInput(context, message);
 
-  if (!validateBattleTag(battleTag)) {
-    message.channel.sendMessage('I require medical attention. \nI can\'t do anything without a valid BattleTag');
+  if (!userInput) {
     return;
+  }
+
+  let battleTag = userInput.user;
+  let platform = userInput.platform;
+  let region = userInput.region;
+
+  const query = {
+    discordId: message.author.id,
   };
 
-  let doc = { hello: 'world'
-                 , n: 5
-                 , today: new Date()
-                 , nedbIsAwesome: true
-                 , notthere: null
-                 , notToBeSaved: undefined
-                 , fruits: [ 'apple', 'orange', 'pear' ]
-                 , infos: { name: 'nedb' }
-                 };
+  const update = {
+    battleTag,
+    platform,
+    region,
+    discordId: message.author.id,
+  };
 
-  db.insert(doc, function (err, newDoc) {
+  const options = {
+    upsert: true,
+  };
+
+  db.update(query, update, options, (err, result) => {
     console.log(err);
-    console.log(newDoc);
+    console.log(result);
   });
 };
