@@ -1,7 +1,7 @@
 import request from 'request';
 import settings from '../../config/env';
 import { checkStatsInput } from '../utils/checkInput';
-import { marginColour } from '../utils/Colour';
+import { marginColour } from '../utils/colour';
 
 export default function statsCommand(context, message) {
 

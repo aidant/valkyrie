@@ -1,4 +1,4 @@
-const BATTLETAG_REGEX = /^[a-zA-Z0-9]+#[0-9]{4,5}$/;
+const BATTLETAG_REGEX = /^[a-zA-Z0-9]+#[0-9]{4,6}$/;
 const PSN_REGEX = /^[\w-]{3,16}$/;
 const XBL_REGEX = /^[A-Za-z0-9]{1,15}$/;
 const VALID_MODES = ['quickplay', 'competitive'];

@@ -21,6 +21,7 @@
     "bluefish": "^0.9.6",
     "discord.js": "github:hydrabolt/discord.js#indev",
     "nedb": "^1.8.0",
+    "nedb-promise": "^2.0.0",
     "request": "^2.78.0"
   },
   "devDependencies": {

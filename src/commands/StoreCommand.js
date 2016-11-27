@@ -1,10 +1,8 @@
-import { validateBattleTag } from '../utils/Validation';
+import { validateBattleTag } from '../utils/validation';
 import { checkStatsInput } from '../utils/checkInput';
-var Datastore = require('nedb')
-  , db = new Datastore({ filename: 'BattleTags.json', autoload: true });
+import db from '../utils/db';
 
-
-export default function storeCommand(context, message) {
+export default async function storeCommand(context, message) {
 
   let userInput = checkStatsInput(context, message);
 
@@ -31,8 +29,7 @@ export default function storeCommand(context, message) {
     upsert: true,
   };
 
-  db.update(query, update, options, (err, result) => {
-    console.log(err);
-    console.log(result);
+  await db.username.update(query, update, options, (err, result) => {
+    message.channel.sendMessage('Verstanden.');
   });
 };
