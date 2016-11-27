@@ -1,5 +1,5 @@
 import settings from '../../config/env';
-import { marginColour } from '../utils/Colour';
+import { marginColour } from '../utils/colour';
 
 export default function helpHeroesCommand(context, message) {
   const embed = {

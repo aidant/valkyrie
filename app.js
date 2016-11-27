@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Discord from 'discord.js';
 import settings from './config/env';
 import commands from './src/commands';
