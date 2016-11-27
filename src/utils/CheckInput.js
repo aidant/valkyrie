@@ -1,14 +1,11 @@
 import { validateBattleTag, validateRegion, validatePlatform, validateOnlineID, validateGamerTag, validateHeros, validateMode } from './validation';
-import db from '../utils/db';
+import { battleTags } from '../utils/battleTag';
 
-export async function checkStatsInput(context, message) {
+export function checkStatsInput(context, message) {
 
-  const results = await db.username.findOne({ discordId: message.author.id }, function (err, docs) {
-  });
-
-  let user = context.params.shift() || results.battleTag;
-  let platform = context.params.shift() || results.platform || 'pc';
-  let region = context.params.shift() || results.region || 'us';
+  let user = context.params.shift();
+  let platform = context.params.shift() || 'pc';
+  let region = context.params.shift() || 'us';
   platform = platform.toLowerCase();
   region = region.toLowerCase();
 

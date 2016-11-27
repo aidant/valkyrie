@@ -1,8 +1,11 @@
 import settings from '../../config/env';
 import { marginColour } from '../utils/colour';
 
-export default function helpHeroesCommand(context, message) {
-  const embed = {
+export default {
+  command: ['help', 'heroes'],
+
+  handler(context, message) {
+    const embed = {
       color: marginColour('default'),
       fields: [
         { name: 'Gamemode', value: 'Gamemodes: Quickplay (qp), Competitive (comp)', inline: false },
@@ -12,5 +15,6 @@ export default function helpHeroesCommand(context, message) {
       ],
       footer: { text: settings.footer }
     };
-  message.channel.sendMessage('', { embed });
+    message.channel.sendMessage('', { embed });
+  },
 };
