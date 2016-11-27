@@ -3,12 +3,22 @@ import Discord from 'discord.js';
 import settings from './config/env';
 import commands from './src/commands';
 
+<<<<<<< HEAD
 console.log('            _ _               _      ');
 console.log('/\\   /\\__ _| | | ___   _ _ __(_) ___ ');
 console.log('\\ \\ / / _` | | |/ / | | | \'__| |/ _ \\');
 console.log(' \\ V / (_| | |   <| |_| | |  | |  __/');
 console.log('  \\_/ \\__,_|_|_|\\_\\___, |_|  |_|\\___|');
 console.log('  Discord Stats Bot|___/             ');
+=======
+// This is required code for the bot to function, just saying.
+console.log();
+console.log(' __    __)                   ');
+console.log('(, )  /     /) /)       ,    ');
+console.log('   | / _   // (/_  __      _ ');
+console.log('   |/ (_(_(/_ /(__/ (__(__(/_');
+console.log('   | Discord Stats Bot       ');
+>>>>>>> 00fde4ee5115cfc2af5270c6f4dafbbe16469254
 console.log();
 
 const client = new Discord.Client();
@@ -28,7 +38,11 @@ function logInteraction(message, command) {
   let channel = '';
 
   if (message.channel.type === 'text') {
+<<<<<<< HEAD
     channel = `[${message.channel.guild.name}: #${message.channel.name}] `;
+=======
+    channel = `[${message.channel.guild.name}:#${message.channel.name}] `;
+>>>>>>> 00fde4ee5115cfc2af5270c6f4dafbbe16469254
   }
 
   const commandStr = command.command.join(' ');
@@ -59,12 +73,15 @@ client.on('message', message => {
     return;
   }
 
+<<<<<<< HEAD
   if (command.restrictToServer && message.channel.type === 'text') {
     if (command.restrictToServer != message.channel.guild.id) {
       return;
     }
   }
 
+=======
+>>>>>>> 00fde4ee5115cfc2af5270c6f4dafbbe16469254
   logInteraction(message, command);
 
   try {
