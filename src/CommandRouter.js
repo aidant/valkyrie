@@ -1,3 +1,12 @@
+import Joi from 'joi';
+
+const commandSchema = Joi.object().keys({
+  command: Joi.array().items(Joi.string().required()).required(),
+  handler: Joi.func(),
+});
+
+let report = "Registered Commands:\n";
+
 export default class CommandRouter {
   constructor() {
     this.root = {
@@ -7,8 +16,9 @@ export default class CommandRouter {
   }
 
   add(descriptor) {
-    let node = this.root;
+    descriptor = Joi.attempt(descriptor, commandSchema, "Error while registering command:\n");
 
+    let node = this.root;
     const command = descriptor.command;
 
     command.forEach(token => {
@@ -24,7 +34,13 @@ export default class CommandRouter {
       node = node.children[token];
     });
 
+    if (node.handler) {
+      throw new Error("Handler already registered for path '" + descriptor.command + "'");
+    }
+
     node.handler = descriptor.handler;
+
+    report += '\t' + descriptor.command.join(' ') + '\n';
 
     return this;
   }
@@ -49,10 +65,16 @@ export default class CommandRouter {
       return;
     }
 
-    return {
+    const result = {
       command,
       params: message.slice(command.length),
       handler: node.handler,
-    }
+    };
+
+    return result;
+  }
+
+  report() {
+    console.log(report);
   }
 }
