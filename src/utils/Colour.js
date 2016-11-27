@@ -18,7 +18,7 @@ const COLOUR = {
     'Hanzo': '11314812',
     'Junkrat': '15447619',
     'Mei': '6924778',
-    'Torbjörn': '12610659',
+    'Torbj&#xF6;rn': '12610659',
     'Widowmaker': '10117022',
     'D.Va': '15896259',
     'Reinhardt': '9608607',
@@ -26,7 +26,7 @@ const COLOUR = {
     'Winston': '9869491',
     'Zarya': '14577067',
     'Ana': '6981037',
-    'Lúcio': '8505156',
+    'L&#xFA;cio': '8505156',
     'Mercy': '15788215',
     'Symmetra': '8499654',
     'Zenyatta': '15918711'
