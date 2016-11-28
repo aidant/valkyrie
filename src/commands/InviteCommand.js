@@ -3,8 +3,9 @@ import { marginColour } from '../utils/colour';
 
 export default {
   command: ['invite'],
+  helpShort: 'Generates an invite link',
 
-  handler(context, message) {
+  async handler(context, message) {
     let embed = {
       color: marginColour('default'),
       title: `Support has arrived.`,

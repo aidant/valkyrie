@@ -2,7 +2,11 @@ import Joi from 'joi';
 
 const commandSchema = Joi.object().keys({
   command: Joi.array().items(Joi.string().required()).required(),
+  restrictToServer: Joi.array().items(Joi.string().required()),
+  isHidden: Joi.boolean().default(false),
+  helpShort: Joi.string(),
   handler: Joi.func(),
+  help: Joi.func(),
 });
 
 let report = "Registered Commands:\n";
@@ -10,7 +14,8 @@ let report = "Registered Commands:\n";
 export default class CommandRouter {
   constructor() {
     this.root = {
-      token: '',
+      name: null,
+      path: [],
       children: {},
     };
   }
@@ -26,7 +31,9 @@ export default class CommandRouter {
 
       if (!node.children[token]) {
         node.children[token] = {
-          token,
+          name: token,
+          path: node.path.concat(token),
+          parent: node,
           children: {},
         };
       }
@@ -38,17 +45,16 @@ export default class CommandRouter {
       throw new Error("Handler already registered for path '" + descriptor.command + "'");
     }
 
-    node.handler = descriptor.handler;
-
     report += '\t' + descriptor.command.join(' ') + '\n';
+
+    delete descriptor.command;
+    Object.assign(node, descriptor)
 
     return this;
   }
 
   route(message) {
     let node = this.root;
-
-    const command = [];
 
     message.some(token => {
       token = token.toLowerCase();
@@ -58,20 +64,9 @@ export default class CommandRouter {
       }
 
       node = node.children[token];
-      command.push(token);
     });
 
-    if (!node.handler) {
-      return;
-    }
-
-    const result = {
-      command,
-      params: message.slice(command.length),
-      handler: node.handler,
-    };
-
-    return result;
+    return Object.assign({}, node);
   }
 
   report() {

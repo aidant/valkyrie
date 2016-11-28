@@ -1,9 +1,12 @@
 import { validateBattleTag } from '../utils/validation';
 import { checkStatsInput } from '../utils/checkInput';
-import db from '../utils/db';
+
+import User from '../schema/User';
 
 export default {
   command: ['store'],
+  isHidden: true,
+  helpShort: "I'll remember your Username, Platform and Region",
 
   async handler(context, message) {
     let userInput = checkStatsInput(context, message);
@@ -16,23 +19,19 @@ export default {
     let platform = userInput.platform;
     let region = userInput.region;
 
-    const query = {
-      discordId: message.author.id,
-    };
+    let user = await User.findOne({ discordId: message.author.id });
+    if (!user) {
+      user = User.create({
+        discordId: message.author.id,
+      });
+    }
 
-    const update = {
-      battleTag,
-      platform,
-      region,
-      discordId: message.author.id,
-    };
+    user.battleTag = battleTag;
+    user.platform = platform;
+    user.region = region;
 
-    const options = {
-      upsert: true,
-    };
+    await user.save();
 
-    await db.username.update(query, update, options, (err, result) => {
-      message.channel.sendMessage('Verstanden.');
-    });
-  }
+    message.channel.sendMessage('Verstanden.');
+  },
 };
