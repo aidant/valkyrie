@@ -1,10 +1,6 @@
 import { validateBattleTag, validateRegion, validatePlatform, validateOnlineID, validateGamerTag, validateHeros, validateMode } from './validation';
-import db from '../utils/db';
 
-export async function checkStatsInput(context, message) {
-
-  const results = await db.username.findOne({ discordId: message.author.id }, function (err, docs) {
-  });
+export function checkStatsInput(context, message) {
 
   let user = context.params.shift() || results.battleTag;
   let platform = context.params.shift() || results.platform || 'pc';

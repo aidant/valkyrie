@@ -1,3 +1,5 @@
+import Joi from 'joi';
+
 const BATTLETAG_REGEX = /^[a-zA-Z0-9]+#[0-9]{4,6}$/;
 const PSN_REGEX = /^[\w-]{3,16}$/;
 const XBL_REGEX = /^[A-Za-z0-9]{1,15}$/;
@@ -33,3 +35,19 @@ export function validatePlatform(platform) {
 export function validateHeros(hero) {
   return VALID_HEROS.includes(hero);
 };
+
+export function discordId() {
+  return Joi.string();
+}
+
+export function region() {
+  return Joi.string().lowercase().valid('eu', 'us', 'kr', 'cn', 'global').default('us');
+}
+
+export function platform() {
+  return Joi.string().lowercase().valid('pc', 'xbl', 'psn').default('pc');
+}
+
+export function battleTag() {
+  return Joi.string().regex(/^[a-zA-Z0-9]+#[0-9]{4,6}$/);
+}
