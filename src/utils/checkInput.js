@@ -1,11 +1,11 @@
 import { validateBattleTag, validateRegion, validatePlatform, validateOnlineID, validateGamerTag, validateHeros, validateMode } from './validation';
-import { battleTags } from '../utils/battleTag';
 
 export function checkStatsInput(context, message) {
 
-  let user = context.params.shift();
-  let platform = context.params.shift() || 'pc';
-  let region = context.params.shift() || 'us';
+  let user = context.params.shift() || results.battleTag;
+  let platform = context.params.shift() || results.platform || 'pc';
+  let region = context.params.shift() || results.region || 'us';
+
   platform = platform.toLowerCase();
   region = region.toLowerCase();
 

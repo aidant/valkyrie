@@ -5,8 +5,9 @@ import { marginColour } from '../utils/colour';
 
 export default {
   command: ['stats'],
+  helpShort: 'General Overwatch stats',
 
-  handler(context, message) {
+  async handler(context, message) {
     let userInput = checkStatsInput(context, message);
 
     if (!userInput) {
@@ -89,5 +90,18 @@ export default {
         message.channel.sendMessage('I require medical attention. \n```' + body.error + '```');
       };
     });
+  },
+
+  async help(context, message) {
+    const embed = {
+      color: marginColour('default'),
+      fields: [
+        { name: 'User', value: 'Must be a valid BattleTag, Gamertag or Online ID', inline: false },
+        { name: 'Platform', value: 'Platforms: pc, xbl, psn \nDeafult: pc ', inline: false },
+        { name: 'Region', value: 'Regions: eu, us, kr, cn \nDeafult: us ', inline: false },
+      ],
+      footer: { text: settings.footer }
+    };
+    message.channel.sendMessage('', { embed });
   }
 };
