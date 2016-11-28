@@ -4,9 +4,10 @@ import { checkStatsInput, checkGamemodeInput } from '../utils/checkInput';
 import { marginColour } from '../utils/colour';
 
 export default {
-  command: ['heroes'],
+  command: ['heros'],
+  helpShort: 'Top 6 most played heros',
 
-  handler(context, message) {
+  async handler(context, message) {
     let mode = context.params.shift();
     let userInput = checkStatsInput(context, message);
     let userInputMode = checkGamemodeInput(mode, message);
@@ -77,5 +78,19 @@ export default {
         message.channel.sendMessage('I require medical attention. \n```' + body.error + '```')
       }
     });
-  }
+  },
+
+  async help(context, message) {
+    const embed = {
+      color: marginColour('default'),
+      fields: [
+        { name: 'Gamemode', value: 'Gamemodes: Quickplay (qp), Competitive (comp)', inline: false },
+        { name: 'User', value: 'Must be a valid BattleTag, Gamertag or Online ID', inline: false },
+        { name: 'Platform', value: 'Platforms: pc, xbl, psn \nDeafult: pc ', inline: false },
+        { name: 'Region', value: 'Regions: eu, us, kr, cn \nDeafult: us ', inline: false },
+      ],
+      footer: { text: settings.footer }
+    };
+    message.channel.sendMessage('', { embed });
+  },
 };
