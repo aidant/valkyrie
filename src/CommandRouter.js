@@ -44,8 +44,6 @@ export default class CommandRouter {
 
     report += '\t' + descriptor.command.join(' ') + '\n';
 
-    report += '\t' + descriptor.command.join(' ') + '\n';
-
     return this;
   }
 
