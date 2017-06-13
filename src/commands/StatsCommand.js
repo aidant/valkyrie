@@ -5,7 +5,7 @@ import marginColor from '../utils/color';
 import fromSeconds from '../utils/fromSeconds';
 import profileImage from '../utils/profileImage';
 import path from 'path';
-import heroName from '../utils/HeroName';
+import heroName from '../utils/heroName';
 import Params from '../utils/params';
 
 export default {
