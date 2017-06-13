@@ -89,6 +89,7 @@ export default class Params {
   }
 
   db() {
+    if(!this.context.user) { return this };
     if(!this.result.accountTag && !this.result.region) {
       this.result.accountTag = this.context.user.accountTag
       this.result.region = this.context.user.region

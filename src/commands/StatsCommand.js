@@ -16,6 +16,17 @@ export default {
 
     let input = new Params(context, message).region().gamemode().accountTag().db().result
 
+    if (!input.accountTag || !input.gamemode) {
+      message.embed = function() {
+        return new Embed(this);
+      };
+
+      message.embed()
+        .description('I require an Account and Gamemode.')
+        .send()
+        return;
+    }
+
     rp({uri: `http://localhost:3000/api/profile/${input.accountTag.replace('#', '-')}/${input.region}`, json: true})
       .then(function (account) {
 
