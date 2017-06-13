@@ -43,7 +43,7 @@ export default {
     message.embed()
       .author(message.author.username, null, message.author.avatarURL)
       .fields('Account', accountTag)
-      .fields('Hidden account tag', user.isAccountTagHidden)
+      .fields('Hidden BattleTag', user.isAccountTagHidden)
       .fields('Region', user.region)
       .fields('Default Gamemode', user.gamemode)
       .fields('Sensitivity', user.sensitivity)
@@ -60,11 +60,11 @@ export default {
 
     message.embed()
       .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')
-      .fields('Hidden account tag', 'hidden:true or hidden:false')
+      .fields('Hidden BattleTag', '`hidden:true` or `hidden:false`\nWhen true your full BattleTag won\'t be shown.')
       .fields('Region', 'us, eu, kr, xbl, psn')
       .fields('Default Gamemode', 'quickplay (qp) or competitive (comp)')
-      .fields('Mouse DPI', 'Example; dpi:800')
-      .fields('Sensitivity', 'Example; sense:7.5')
+      .fields('Mouse DPI', 'Example; `dpi:800`')
+      .fields('Sensitivity', 'Example; `sense:7.5`')
       .footer()
       .send(false)
   },
