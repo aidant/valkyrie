@@ -9,7 +9,7 @@ export default {
 
   async handler(context, message) {
 
-    if(context.params.length < 2) {
+    if(context.params.length < 1) {
 
       message.embed = function() {
         return new Embed(this);
@@ -67,7 +67,8 @@ export default {
     };
 
     message.embed()
-      .description('')
+      .description('Please incluse a small summary of your issue.')
+      .fields('Example;', 'val report Failed to show me information for my BattleTag LazyGamer#11985.')
       .send()
 
   }
