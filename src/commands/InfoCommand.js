@@ -1,9 +1,7 @@
 import settings from '../../config/env';
 import Embed from '../utils/embed';
 import moment from 'moment';
-import marginColor from '../utils/Color';
 import discordJsPackageInfo from 'discord.js/package';
-import { platformName } from '../utils/validation'
 
 export default {
   command: ['info'],
