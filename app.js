@@ -5,7 +5,7 @@ global.Promise = Bluebird;
 import bot from './src/bot';
 import db from './src/db';
 
-
+console.log();
 console.log('            _ _               _      ');
 console.log('/\\   /\\__ _| | | ___   _ _ __(_) ___ ');
 console.log('\\ \\ / / _` | | |/ / | | | \'__| |/ _ \\');

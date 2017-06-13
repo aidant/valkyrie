@@ -18,13 +18,18 @@
   },
   "homepage": "https://github.com/AidanT/Valkyrie#readme",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "bluefish": "^0.9.6",
     "camo": "^0.12.3",
-    "discord.js": "github:hydrabolt/discord.js#indev",
-    "joi": "^10.0.1",
+    "canvas": "^1.6.5",
+    "discord.js": "^11.1.0",
+    "joi": "^10.5.2",
+    "json-query": "^2.2.2",
+    "moment": "^2.18.1",
     "nedb": "^1.8.0",
     "nedb-promise": "^2.0.0",
-    "request": "^2.78.0"
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

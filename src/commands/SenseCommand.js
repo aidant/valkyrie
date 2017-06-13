@@ -1,13 +1,13 @@
-import settings from '../../config/env';
-import { marginColour } from '../utils/colour';
+import Embed from '../utils/embed';
+import Params from '../utils/params';
 
 import User from '../schema/User';
 
-const DISCORD_ID_REGEX = /^<@(\d+)>$/;
+const DISCORD_ID_REGEX = /^[0-9]*$/;
 
 function parseMention(str) {
-  const match = str && str.match(DISCORD_ID_REGEX);
-  return match && match[1];
+  const match = str && str.id.match(DISCORD_ID_REGEX);
+  return match && match[0];
 }
 
 function calcSensitivityInCm(dpi, sense) {
@@ -17,57 +17,51 @@ function calcSensitivityInCm(dpi, sense) {
 
 export default {
   command: ['sense'],
-  helpShort: "Player sensitivity settings",
+  helpShort: 'Display your sensitivity settings.',
 
   async handler(context, message) {
-    const target = parseMention(context.params.shift());
-    if (!target) {
-      message.channel.sendMessage('I do not understand');
-      return;
+
+    if (!context.user || (!context.user.mouseDpi || !context.user.sensitivity)) {
+
+      message.embed = function() {
+        return new Embed(this);
+      }
+
+      message.embed()
+        .color()
+        .description(`I require your Mouse DPI & Sensitivity. Use the store command to save your information.`)
+        .footer()
+        .send()
+        return;
+
     }
 
-    const discordPlayer = message.mentions.users.get(target);
+    const cm360 = calcSensitivityInCm(context.user.mouseDpi, context.user.sensitivity).toFixed(3);
 
-
-    const player = await User.findOne({ discordId: target });
-    if (!player) {
-      message.channel.sendMessage('I do not know anything about that person.');
-      return;
+    message.embed = function() {
+      return new Embed(this);
     }
 
-    if (!player.sensitivity || !player.mouseDpi) {
-      message.channel.sendMessage('I do not know that players mouse settings.');
-      return;
+    message.embed()
+      .color()
+      .author(message.author.username, null, message.author.avatarURL)
+      .description(`${message.author.username}'s mouse settings`)
+      .fields('DPI', context.user.mouseDpi)
+      .fields('Sensitivity', context.user.sensitivity)
+      .fields('CM/360', cm360)
+      .footer()
+      .send()
+  },
+  async help(context, message) {
+
+    message.embed = function() {
+      return new Embed(this);
     }
 
-    console.log(discordPlayer);
+    message.embed()
+      .description('First save your information with the store command')
+      .footer()
+      .send()
 
-    const cm360 = calcSensitivityInCm(player.mouseDpi, player.sensitivity).toFixed(3);
-    console.log(cm360);
-
-    let embed = {
-      author: { name: discordPlayer.username, icon_url: discordPlayer.avatar },
-      title: `${discordPlayer.username}'s Mouse settings`,
-      fields: [
-        {
-          name: 'Mouse DPI',
-          value: player.mouseDpi,
-          inline: true
-        },
-        {
-          name: 'Sensitivity',
-          value: player.sensitivity,
-          inline: true
-        },
-        {
-          name: 'CM/360',
-          value: cm360,
-          inline: true
-        },
-      ],
-      footer: { text: settings.footer }
-    };
-
-    message.channel.sendMessage('', { embed });
   }
 };
