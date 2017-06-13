@@ -1,16 +1,22 @@
-import { GINGER_SERVER_ID } from '../../consts';
+import Embed from '../../utils/embed';
 
 export default {
   command: ['hamster'],
-  restrictToServer: [ GINGER_SERVER_ID ],
+  restrictToServer: ['213569537000472576'],
+  isHidden: true,
 
-  handler(context, message) {
+  async handler(context, message) {
     let date = new Date();
-    let bladder = Math.round(date.getMinutes() / 59 * 100);
+    let bladder = Math.round(date.getMinutes() / 59 * 100)
     if (bladder < 100) {
-      message.channel.sendMessage(`Ginger's bladder is ${bladder}% full`);
+      message.embed = function() {
+        return new Embed(this);
+      }
+      message.embed()
+        .description(`Ginger's bladder is ${bladder}% full`)
+        .send()
     } else {
-      message.channel.sendMessage(':hamster:')
+      message.channel.send(':hamster:')
     }
   }
-};
+}

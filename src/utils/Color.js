@@ -1,4 +1,4 @@
-const COLOUR = {
+const COLOR = {
     'default': '15746887',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png': '12346195',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-2.png': '9013384',
@@ -18,7 +18,7 @@ const COLOUR = {
     'Hanzo': '11314812',
     'Junkrat': '15447619',
     'Mei': '6924778',
-    'Torbj&#xF6;rn': '12610659',
+    'Torbjörn': '12610659',
     'Widowmaker': '10117022',
     'D.Va': '15896259',
     'Reinhardt': '9608607',
@@ -26,12 +26,12 @@ const COLOUR = {
     'Winston': '9869491',
     'Zarya': '14577067',
     'Ana': '6981037',
-    'L&#xFA;cio': '8505156',
+    'Lúcio': '8505156',
     'Mercy': '15788215',
     'Symmetra': '8499654',
     'Zenyatta': '15918711'
   };
 
-export function marginColour(colour) {
-  return COLOUR[colour] || COLOUR['default'];
+export default function (color) {
+  return COLOR[color];
 };

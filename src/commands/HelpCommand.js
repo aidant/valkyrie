@@ -1,5 +1,5 @@
 import settings from '../../config/env';
-import { marginColour } from '../utils/colour';
+import marginColor from '../utils/color';
 
 const HELP = [
   "There's no prescription to treat what you have.",
@@ -12,7 +12,7 @@ const HELP = [
 ];
 
 function generateMercyQuote(message) {
-  message.channel.sendMessage(HELP[Math.floor(Math.random() * HELP.length)]);
+  message.channel.send(HELP[Math.floor(Math.random() * HELP.length)]);
 }
 
 function generateHelpIndex(command, message) {
@@ -34,11 +34,10 @@ function generateHelpIndex(command, message) {
   if (fields.length > 0) {
     const embed = {
       fields,
-      color: marginColour('default'),
       footer: { text: settings.footer }
     };
 
-    message.channel.sendMessage('', { embed });
+    message.channel.send('', { embed });
   } else {
     // TODO(akira): What should be done when there are no sub-commands visible?
     generateMercyQuote(message);
@@ -47,7 +46,7 @@ function generateHelpIndex(command, message) {
 
 export default {
   command: ['help'],
-  helpShort: `Example: ${settings.activator} Help Stats`,
+  helpShort: `Example; ${settings.activator} help stats`,
 
   async handler(context, message) {
     const command = context.router.route(context.params);

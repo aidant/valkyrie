@@ -16,25 +16,18 @@ export default class User extends Document {
       required: true,
     };
 
-    this.battleTag = {
+    this.accountTag = {
       type: String,
     };
 
-    this.isBattleTagHidden = {
+    this.isAccountTagHidden = {
       type: Boolean,
       default: false,
     };
 
-    this.platform = {
-      type: String,
-      default: 'pc',
-      choices: ['pc', 'xbl', 'psn'],
-    };
-
     this.region = {
       type: String,
-      default: 'us',
-      choices: ['eu', 'us', 'kr', 'cn', 'global'],
+      choices: ['eu', 'us', 'kr', 'psn', 'xbl', undefined],
     };
 
     this.mouseDpi = {
@@ -44,6 +37,11 @@ export default class User extends Document {
     this.sensitivity = {
       type: Number,
     };
+
+    this.gamemode = {
+      type: String,
+      choices: ['quickplay', 'competitive', undefined],
+    };
   }
 
   static collectionName() {
@@ -51,12 +49,5 @@ export default class User extends Document {
   }
 
   postValidate() {
-    if (this.platform === 'pc' && this.region === 'global') {
-      throw new ValidationError('Region must not be "global" for the "pc" platform.');
-    }
-
-    if (this.platform !== 'pc' && this.region !== 'global') {
-      throw new ValidationError('Region must be "global" for "xbl" and "psn" platforms.');
-    }
   }
 }

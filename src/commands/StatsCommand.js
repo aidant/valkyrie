@@ -1,107 +1,95 @@
-import request from 'request';
+import rp from 'request-promise';
+import Embed from '../utils/embed';
 import settings from '../../config/env';
-import { checkStatsInput } from '../utils/checkInput';
-import { marginColour } from '../utils/colour';
+import marginColor from '../utils/Color';
+import fromSeconds from '../utils/FromSeconds';
+import profileImage from '../utils/profileImage';
+import path from 'path';
+import heroName from '../utils/HeroName';
+import Params from '../utils/params';
 
 export default {
   command: ['stats'],
-  helpShort: 'General Overwatch stats',
+  helpShort: 'Look up your basic Overwatch stats.',
 
   async handler(context, message) {
-    let userInput = checkStatsInput(context, message);
 
-    if (!userInput) {
-      return;
-    }
+    let input = new Params(context, message).region().gamemode().accountTag().db().result
 
-    let user = userInput.user;
-    let platform = userInput.platform;
-    let region = userInput.region;
-    let overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${region}/${user}`;
+    rp({uri: `http://localhost:3000/api/profile/${input.accountTag.replace('#', '-')}/${input.region}`, json: true})
+      .then(function (account) {
 
-    if (platform === 'psn' || platform === 'xbl') {
-      overwatch_url = `https://playoverwatch.com/en-us/career/${platform}/${user}`;
-    };
-
-    const query = {
-      url: `https://api.lootbox.eu/${platform}/${region}/${user}/profile`,
-      json: true
-    };
-
-    message.channel.sendMessage('I\'ve got you.');
-
-    request(query, (error, response, body) => {
-      const success = !error && response.statusCode >= 200 && response.statusCode < 300 && (!body.statusCode || (body.statusCode >= 200 && body.statusCode < 300));
-      if (success) {
-
-        let comp_rank = body.data.competitive.rank || 'unranked';
-        let comp_winrate = Math.round(body.data.games.competitive.wins / body.data.games.competitive.played * 100) + '%';
-        let comp_playtime = body.data.playtime.competitive || 'N/A';
-        let rank_colour = marginColour(body.data.competitive.rank_img);
-
-        if (!body.data.games.competitive.played) {
-          comp_winrate = 'N/A';
+        message.embed = function() {
+          return new Embed(this);
         };
 
-        let embed = {
-          color: rank_colour,
-          author: { name: body.data.username, icon_url: body.data.avatar },
-          title: `${body.data.username}'s Overwatch stats`,
-          url: overwatch_url,
-          description: `Quick summary of ${body.data.username}'s Overwatch stats:`,
-          fields: [
-            {
-              name: 'Skill Rating',
-              value: comp_rank,
-              inline: true
-            },
-            {
-              name: 'Competitive win rate',
-              value:  comp_winrate,
-              inline: true
-            },
-            {
-              name: 'Time played in Comp',
-              value: comp_playtime,
-              inline: true
-            },
-            {
-              name: 'Level',
-              value: body.data.level,
-              inline: true
-            },
-            {
-              name: 'QP Wins',
-              value: body.data.games.quick.wins,
-              inline: true
-            },
-            {
-              name: 'Time played in QP',
-              value: body.data.playtime.quick,
-              inline: true
-            }
-          ],
-          timestamp: new Date(),
-          footer: { icon_url: body.data.competitive.rank_img, text: 'Valkyrie '}
-        }
-        message.channel.sendMessage('', { embed });
-      } else {
-        console.log(body);
-        message.channel.sendMessage('I require medical attention. \n```' + body.error + '```');
-      };
-    });
-  },
+        let accountURL = account.profile.url
+        let accountTag = account.profile.platform_username
 
+        if(input.isAccountTagHidden === true) { accountURL = ''; accountTag = account.profile.username.split('#')[0]; }
+        if(account.competitive.rank === null) { account.competitive.rank = 'unranked'; }
+
+        let messE = message.embed()
+
+        messE
+          .author(accountTag, accountURL, account.images.player_icon)
+          .color(marginColor(account.images.rank))
+          .footer('Valkyrie', account.images.rank)
+          .description(`A brief overview of ${account.profile.username}'s Overwatch stats.`)
+          .timestamp()
+          .thumbnail('attachment://profile.png')
+
+        if(input.gamemode === 'quickplay') {
+          messE
+            .fields('Level', account.profile.level)
+            .fields('Quickplay playtime', fromSeconds(account.quickplay.time_played_seconds))
+            .fields('Quickplay wins', account.quickplay.games_won)
+            .fields('Most played hero', `${heroName(account.quickplay.heroes.time_played_seconds[0].hero)} - ${fromSeconds(account.quickplay.heroes.time_played_seconds[0].value)}`)
+        }
+
+        if(input.gamemode === 'competitive') {
+          messE
+            .fields('Skill rating', account.competitive.rank)
+            .fields('Competitive playtime', fromSeconds(account.competitive.time_played_seconds))
+            .fields('Competitive games', `${account.competitive.games_won} Won, ${account.competitive.games_lost} Lost, ${account.competitive.games_tied} Tied\n${Math.floor(account.competitive.games_won / account.competitive.games_played * 100)}%`)
+            .fields('Most played hero', `${heroName(account.competitive.heroes.time_played_seconds[0].hero)} - ${fromSeconds(account.competitive.heroes.time_played_seconds[0].value)}`)
+        }
+
+        profileImage(account.images.portrait.border, account.images.portrait.star, account[input.gamemode].heroes.time_played_seconds[0].hero, function(file){
+          messE
+          .attach(path.join(__dirname, '..', 'img', file), 'profile.png')
+          .send()
+        })
+
+      })
+      .catch(function (err) {
+
+        console.log(err)
+        message.embed = function() {
+          return new Embed(this);
+        };
+
+        message.embed()
+          .description(`I've failed you.`)
+          .send()
+
+      });
+
+  },
   async help(context, message) {
-    const embed = {
-      color: marginColour('default'),
-      fields: [
-        { name: 'User', value: 'Must be a valid BattleTag, Gamertag or Online ID', inline: false },
-        { name: 'Platform', value: 'Platforms: pc, xbl, psn \nDeafult: pc ', inline: false },
-        { name: 'Region', value: 'Regions: eu, us, kr, cn \nDeafult: us ', inline: false },
-      ],
-      footer: { text: settings.footer }
+    message.embed = function() {
+      return new Embed(this);
     };
-    message.channel.sendMessage('', { embed });
+
+    message.embed()
+      .description('You can save your information in the store command')
+      .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')
+      .fields('Region (optional)', 'us, eu, kr, xbl, psn')
+      .fields('Gamemode', 'quickplay (qp) or competitive (comp)')
+      .footer()
+      .send(false)
+
   }
 };
+
+

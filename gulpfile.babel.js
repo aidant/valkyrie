@@ -8,7 +8,7 @@ const plugins = gulpLoadPlugins();
 
 const paths = {
   js: ['./**/*.js', '!dist/**', '!node_modules/**'],
-  nonJs: ['./package.json', './.gitignore']
+  nonJs: ['./package.json', './.gitignore', './**/*.png', '!dist/**', '!node_modules/**']
 };
 
 gulp.task('clean', () =>
