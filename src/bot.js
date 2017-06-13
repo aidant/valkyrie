@@ -4,21 +4,10 @@ import settings from '../config/env';
 import router from './commands';
 import User from './schema/User';
 
-const VAL = [
-  "Did someone call for a witch?",
-  "Right beside you.",
-  "Valkyrie im Bereitschaftsdienst.",
-  "I'm here.",
-  "I'll enjoy the quiet while it lasts.",
-  "Valkyrie online.",
-  "Operating at maximum efficiency.",
-  "Medic!... Wait, that's me!"
-];
-
 const DISCORD_USER_REF_REGEX = /^<@(\d+)>$/;
 
 function logInteraction(context, message) {
-  const from = `<${message.author.username}#${message.author.discriminator}> `;
+  const from = `<${message.author.tag}> `;
   let channel = '';
 
   if (message.channel.type === 'text') {
@@ -59,9 +48,16 @@ const client = new Discord.Client();
 client.on('ready', () => {
   router.report();
 
-  console.log('Valkyrie connected.');
-  client.user.setStatus('dnd');
-  client.user.setGame('val help');
+  client.user.setStatus('online');
+  client.user.setGame(`${settings.activator} help`);
+  //client.user.setAvatar('./Val-12.png')
+    //.then(user => console.log(`New avatar set!`))
+    //.catch(console.error);
+  console.log(`${client.user.username} serving ${client.users.size} users in ${client.guilds.size} servers;`);
+  for (const [key, guild] of client.guilds) {
+  console.log(`[${key}]: ${guild.name}`)
+  }
+
 });
 
 client.on('message', async message => {
@@ -74,8 +70,15 @@ client.on('message', async message => {
 
   const command = router.route(parts);
   if (!command || !command.handler) {
-    message.channel.sendMessage(VAL[Math.floor(Math.random()*VAL.length)]);
+    message.channel.send(settings.voice_lines[Math.floor(Math.random()*settings.voice_lines.length)]);
     return;
+  }
+
+  if (command.restrictToServer && message.channel.type === 'text') {
+    if (command.restrictToServer != message.channel.guild.id) {
+      message.channel.send(settings.voice_lines[Math.floor(Math.random()*settings.voice_lines.length)]);
+      return;
+    }
   }
 
   const context = await createContext(command, parts, message);
@@ -86,7 +89,7 @@ client.on('message', async message => {
   command
     .handler(context, message)
     .catch(e => {
-      message.channel.sendMessage('I require medical attention.')
+      message.channel.send({ embed: {description: 'I require medical attention.', color: 15746887} })
       console.error(e);
     });
 });

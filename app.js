@@ -5,14 +5,13 @@ global.Promise = Bluebird;
 import bot from './src/bot';
 import db from './src/db';
 
-
-// This is required code for the bot to function, just saying.
 console.log();
-console.log(' __    __)                   ');
-console.log('(, )  /     /) /)       ,    ');
-console.log('   | / _   // (/_  __      _ ');
-console.log('   |/ (_(_(/_ /(__/ (__(__(/_');
-console.log('   | Discord Stats Bot       ');
+console.log('            _ _               _      ');
+console.log('/\\   /\\__ _| | | ___   _ _ __(_) ___ ');
+console.log('\\ \\ / / _` | | |/ / | | | \'__| |/ _ \\');
+console.log(' \\ V / (_| | |   <| |_| | |  | |  __/');
+console.log('  \\_/ \\__,_|_|_|\\_\\___, |_|  |_|\\___|');
+console.log('  Discord Stats Bot|___/             ');
 console.log();
 
 Promise.resolve()

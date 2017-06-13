@@ -1,4 +1,4 @@
-const COLOUR = {
+const COLOR = {
     'default': '15746887',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png': '12346195',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-2.png': '9013384',
@@ -32,6 +32,6 @@ const COLOUR = {
     'Zenyatta': '15918711'
   };
 
-export function marginColour(colour) {
-  return COLOUR[colour] || COLOUR['default'];
+export default function (color) {
+  return COLOR[color];
 };
