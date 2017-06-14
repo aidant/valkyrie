@@ -9,14 +9,14 @@ export default class Embed {
     this.files = [];
   }
 
-  title(title){ //Done for now
+  title(title){
     if (title) {
       this.embed.title = title;
     }
     return this;
   }
 
-  description(description) { //Done for now
+  description(description) {
     if(description) {
       this.embed.description = description;
     }
@@ -41,7 +41,7 @@ export default class Embed {
     return this;
   }
 
-  timestamp() { //Done for now
+  timestamp() {
     this.embed.timestamp = new Date();
     return this;
   }
@@ -83,7 +83,7 @@ export default class Embed {
     return this;
   }
 
-  fields(name, value) { //Done for now
+  fields(name, value) {
     if (name && value) {
       this.embed.fields.push({name, value: String(value), inline: false});
     }
@@ -111,7 +111,7 @@ export default class Embed {
     return this
   }
 
-  send(inline) { //Done for now
+  send(inline) {
     let fields = this.embed.fields;
 
     if(inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) {
@@ -119,12 +119,10 @@ export default class Embed {
         fields[i].inline = true;
       }
     }
-
-    console.log(this.embed);
     return this.message.channel.send('', { embed: this.embed, files: this.files });
   }
 
-  sendHook(inline) { //Done for now
+  sendHook(inline) {
     let fields = this.embed.fields;
 
     if(inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) {
@@ -132,8 +130,6 @@ export default class Embed {
         fields[i].inline = true;
       }
     }
-
-    console.log(this.embed);
     return this.message.send('', { embeds: [this.embed], files: this.files });
   }
 

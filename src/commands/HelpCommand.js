@@ -1,5 +1,4 @@
 import settings from '../../config/env';
-import marginColor from '../utils/color';
 
 const HELP = [
   "There's no prescription to treat what you have.",
