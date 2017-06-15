@@ -10,7 +10,6 @@ const defaults = {
   activator: 'val',
   name: 'Valkyrie',
   role: '#f04747',
-  url: '',
   footer: 'Built by LazyGamer & Akira',
   databaseUri: 'nedb://' + path.join(rootPath, 'data'),
   voice_lines: [
