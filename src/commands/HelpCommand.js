@@ -1,4 +1,5 @@
 import settings from '../../config/env';
+import Embed from '../utils/embed';
 
 const HELP = [
   "There's no prescription to treat what you have.",
@@ -15,37 +16,32 @@ function generateMercyQuote(message) {
 }
 
 function generateHelpIndex(command, message) {
-  const fields = [];
+  let embed = new Embed(message);
 
   const children = Object.keys(command.children).sort();
   children.forEach(name => {
     const child = command.children[name];
 
     if (!child.isHidden && child.helpShort) {
-      fields.push({
-        name: name.charAt(0).toUpperCase() + name.slice(1),
-        value: child.helpShort,
-        inline: false,
-      });
+      embed.fields(name.charAt(0).toUpperCase() + name.slice(1), child.helpShort)
     }
   });
 
-  if (fields.length > 0) {
-    const embed = {
-      fields,
-      footer: { text: settings.footer }
-    };
-
-    message.channel.send('', { embed });
+  if (embed.embed.fields.length > 0) {
+    embed
+      .description(`For more detailed information about each command, type \`${settings.activator} help command-name\`\nExample: \`${settings.activator} help save\``)
+      .send(false);
   } else {
-    // TODO(akira): What should be done when there are no sub-commands visible?
-    generateMercyQuote(message);
+    message.embed = () => { return new Embed(message); };
+    message.embed()
+      .description('There is no extra help information for this command.')
+      .send()
   }
 }
 
 export default {
   command: ['help'],
-  helpShort: `Example; ${settings.activator} help stats`,
+  isHidden: true,
 
   async handler(context, message) {
     const command = context.router.route(context.params);

@@ -3,7 +3,7 @@ import CommandRouter from '../CommandRouter';
 import HelpCommand from './HelpCommand';
 import InfoCommand from './InfoCommand';
 import InviteCommand from './InviteCommand';
-import StoreCommand from './StoreCommand';
+import SaveCommand from './SaveCommand';
 import SenseCommand from './SenseCommand';
 import StatsCommand from './StatsCommand';
 import CatCommand from './ginger/CatCommand';
@@ -15,7 +15,7 @@ router
   .add(HelpCommand)
   .add(InfoCommand)
   .add(InviteCommand)
-  .add(StoreCommand)
+  .add(SaveCommand)
   .add(SenseCommand)
   .add(StatsCommand)
   .add(CatCommand)

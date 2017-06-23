@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import Embed from '../utils/embed'
+import settings from '../../config/env';
 
 const hook = new Discord.WebhookClient('324078260948303873', '8pbG-_MA8lV58pUJFtRTqAAEjzt0j-69pNW00qs9_thjUIIH6BBrSiASmdxtEmA8Sxjg');
 
@@ -10,20 +11,11 @@ export default {
   async handler(context, message) {
 
     if(context.params.length < 1) {
-
-      message.embed = function() {
-        return new Embed(this);
-      };
-
-      message.embed()
-        .description('A message is required to send.')
-        .send()
-        return;
+      this.help(context, message)
+      return;
     }
 
-    hook.embed = function() {
-      return new Embed(this);
-    };
+    hook.embed = () => { return new Embed(hook); };
 
     let channel = `<#${message.channel.id}>`;
     let links = `<@${message.author.id}>`
@@ -31,29 +23,35 @@ export default {
       channel = `#${message.channel.name} - ${message.guild.name}`
       links = `<#${message.channel.id}>\n<@${message.author.id}>`
     }
+    let db = '';
+    if (context.user) {
+      db = [];
+      db.push(`Account: ${context.user.accountTag}`)
+      db.push(`Region: ${context.user.region}`)
+      db.push(`Hidden: ${context.user.isAccountTagHidden}`)
+      db.push(`Gamemode: ${context.user.gamemode}`)
+      db.push(`Mouse DPI: ${context.user.mouseDpi}`)
+      db.push(`Sensitivity: ${context.user.sensitivity}`)
+      db = db.join(' \n')
+    }
 
     hook.embed()
       .author(message.author.username, null, message.author.avatarURL)
-      .fields('Info', `Reported in; ${channel} \nBy user; ${message.author.username}`)
+      .fields('Info', `Reported in: ${channel} \nBy user: ${message.author.username}`)
       .fields('Links', links)
+      .fields('Database', db)
       .description(context.params.join(' '))
       .timestamp()
       .sendHook(false)
-      .then(function() {
-        message.embed = function() {
-          return new Embed(this);
-        };
-
+      .then(() => {
+        message.embed = () => { return new Embed(message); };
         message.embed()
-          .description('Your message was sent.')
+          .description('Your message was sent!')
           .send()
       })
-      .catch(function (e) {
-        console.log(e)
-        message.embed = function() {
-          return new Embed(this);
-        };
-
+      .catch(e => {
+        console.error(e)
+        message.embed = () => { return new Embed(message); };
         message.embed()
           .description('Failed to send message.')
           .send()
@@ -61,15 +59,10 @@ export default {
 
   },
   async help(context, message) {
-
-    message.embed = function() {
-      return new Embed(this);
-    };
-
+    message.embed = () => { return new Embed(message); };
     message.embed()
-      .description('Please incluse a small summary of your issue.')
-      .fields('Example;', 'val report Failed to show me information for my BattleTag LazyGamer#11985.')
+      .description('Please include a small summary of your issue.')
+      .fields('Example:', `\`${settings.activator} report No stats are shown for my battleTag, Tracer#3939.\``)
       .send()
-
   }
 };

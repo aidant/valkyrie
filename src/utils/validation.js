@@ -9,15 +9,15 @@ export function valRegion() {
 }
 
 export function valBattleTag() {
-  return Joi.string().regex(/^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12}(#|-)[0-9]{4,6}$/);
+  return Joi.string().regex(/^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12}(#)[0-9]{4,6}$/);
 }
 
 export function valOnlineID() {
-  return Joi.string().regex(/^[\w-]{3,16}$/);
+  return Joi.string().regex(/^[A-Za-z]{1}[A-Za-z0-9_-]{2,15}$/);
 }
 
 export function valGamerTag() {
-  return Joi.string().regex(/^[A-Za-z0-9]{1,15}$/);
+  return Joi.string().regex(/^[A-Za-z]{1}[A-Za-z0-9]{0,14}$/);
 }
 
 export function valHeroes() {
@@ -38,4 +38,8 @@ export function valSensitivity() {
 
 export function valIsAccountTagHidden() {
   return Joi.string().regex(/^hidden:(false|true)$/i);
+}
+
+export function valDebug() {
+  return Joi.string().regex(/^debug:true$/i);
 }

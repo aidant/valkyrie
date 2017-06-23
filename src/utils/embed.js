@@ -70,15 +70,16 @@ export default class Embed {
     return this;
   }
 
-  author(name, url, icon_url) {
+  author(name, url, icon_url, hidden) {
     this.embed.author = {};
 
     if (name) {
       this.embed.author.name = name;
     }
-
+    if(!hidden) {
       this.embed.author.url = url;
-      this.embed.author.icon_url = icon_url;
+    }
+    this.embed.author.icon_url = icon_url;
 
     return this;
   }
@@ -114,7 +115,7 @@ export default class Embed {
   send(inline) {
     let fields = this.embed.fields;
 
-    if(inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) {
+    if((inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) || inline === true) {
       for (var i = fields.length - 1; i >= 0; i--) {
         fields[i].inline = true;
       }
@@ -125,7 +126,7 @@ export default class Embed {
   sendHook(inline) {
     let fields = this.embed.fields;
 
-    if(inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) {
+    if((inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) || inline === true) {
       for (var i = fields.length - 1; i >= 0; i--) {
         fields[i].inline = true;
       }

@@ -5,18 +5,17 @@ import discordJsPackageInfo from 'discord.js/package';
 
 export default {
   command: ['info'],
-  helpShort: 'Information about me.',
+  helpShort: `Information and statistics about ${settings.name}.`,
 
-  async handler(context, message) {
-    message.embed = function() {
-      return new Embed(this);
-    };
-
+  async handler(context, message, client) {
+    message.embed = () => { return new Embed(message); };
     message.embed()
       .fields('Node Uptime', moment.duration(process.uptime(), 'seconds').humanize())
       .fields('Node Version', process.versions.node)
-      .fields('Library', `${discordJsPackageInfo.name.charAt(0).toUpperCase() + discordJsPackageInfo.name.slice(1)} ${discordJsPackageInfo.version}`)
-      .fields('API', 'Infra-sight')
+      .fields('Discord library', `${discordJsPackageInfo.name.charAt(0).toUpperCase() + discordJsPackageInfo.name.slice(1)} ${discordJsPackageInfo.version}`)
+      .fields('API', '[Infra-Sight](https://github.com/AidanT/Infra-Sight)')
+      .fields('Guilds', client.guilds.size)
+      .fields('Users', client.users.size)
       .footer()
       .send()
   }

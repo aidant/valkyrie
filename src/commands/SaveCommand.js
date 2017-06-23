@@ -1,19 +1,17 @@
 import Params from '../utils/params';
 import Embed from '../utils/embed';
-
+import hideAccountTag from '../utils/hideAccountTag';
 import User from '../schema/User';
+import settings from '../../config/env/'
 
 export default {
-  command: ['store'],
-  helpShort: "Save your information so you don't have to type it out every time.",
+  command: ['save'],
+  helpShort: `Save your BattleTag and more. Makes ${settings.name} easier to use.`,
 
   async handler(context, message) {
 
-    let input = new Params(context, message).gamemode().region().accountTag().mouseDpi().sensitivity().isAccountTagHidden().result
-
-    if (!input) {
-      return;
-    }
+    let input = new Params(context, message).gamemode().region().accountTag().mouseDpi().sensitivity().isAccountTagHidden().required().result
+    if (input.error) { return; };
 
     let user = await User.findOne({ discordId: message.author.id });
     if (!user) {
@@ -31,40 +29,39 @@ export default {
 
     await user.save();
 
-    message.embed = function() {
-      return new Embed(this);
-    };
+    let embed = new Embed(message);
 
-    let accountTag = user.accountTag
     if(user.isAccountTagHidden === true) {
-      accountTag = `${accountTag.split('#')[0]}#${accountTag.split('#')[1].replace(/[0-9]/g, '-')}`
+      embed.description(`Warning ${settings.name} is currently in beta. If your BattleTag is shown anywhere please report it using \`${settings.activator} report\``)
     }
 
-    message.embed()
+    embed
       .author(message.author.username, null, message.author.avatarURL)
-      .fields('Account', accountTag)
+      .fields('Account', hideAccountTag(user.accountTag, user.isAccountTagHidden))
       .fields('Hidden BattleTag', user.isAccountTagHidden)
-      .fields('Region', user.region)
-      .fields('Default Gamemode', user.gamemode)
+      .fields('Prefered Region', user.region)
+      .fields('Prefered Gamemode', user.gamemode)
       .fields('Sensitivity', user.sensitivity)
       .fields('Mouse DPI', user.mouseDpi)
       .footer()
-      .send()
+
+    if (embed.embed.fields.length < 1) {
+        this.help(context, message)
+      } else {
+        embed.send()
+      }
 
   },
   async help(context, message) {
-
-    message.embed = function() {
-      return new Embed(this);
-    };
-
+    message.embed = () => { return new Embed(message); };
     message.embed()
+      .description('You can save one or more items at a time. Your information can always be updated later.')
       .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')
       .fields('Hidden BattleTag', '`hidden:true` or `hidden:false`\nWhen true your full BattleTag won\'t be shown.')
-      .fields('Region', 'us, eu, kr, xbl, psn')
-      .fields('Default Gamemode', 'quickplay (qp) or competitive (comp)')
-      .fields('Mouse DPI', 'Example; `dpi:800`')
-      .fields('Sensitivity', 'Example; `sense:7.5`')
+      .fields('Region', 'us, eu, kr, xbl or psn')
+      .fields('Gamemode', 'quickplay (qp) or competitive (comp)')
+      .fields('Mouse DPI', 'Example: `dpi:800`')
+      .fields('Sensitivity', 'Example: `sense:7.5`')
       .footer()
       .send(false)
   },

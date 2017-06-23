@@ -1,6 +1,6 @@
 import Embed from '../utils/embed';
 import Params from '../utils/params';
-
+import settings from '../../config/env';
 import User from '../schema/User';
 
 const DISCORD_ID_REGEX = /^[0-9]*$/;
@@ -21,47 +21,33 @@ export default {
 
   async handler(context, message) {
 
-    if (!context.user || (!context.user.mouseDpi || !context.user.sensitivity)) {
+    let input = new Params(context, message).mouseDpi(true).sensitivity(true).db().required().result;
+    if (input.error) { return; };
 
-      message.embed = function() {
-        return new Embed(this);
-      }
+    const cm360 = calcSensitivityInCm(input.mouseDpi, input.sensitivity).toFixed(3);
 
-      message.embed()
-        .color()
-        .description(`I require your Mouse DPI & Sensitivity. Use the store command to save your information.`)
-        .footer()
-        .send()
-        return;
-
-    }
-
-    const cm360 = calcSensitivityInCm(context.user.mouseDpi, context.user.sensitivity).toFixed(3);
-
-    message.embed = function() {
-      return new Embed(this);
-    }
-
+    message.embed = () => { return new Embed(message); };
     message.embed()
       .color()
       .author(message.author.username, null, message.author.avatarURL)
       .description(`${message.author.username}'s mouse settings`)
-      .fields('DPI', context.user.mouseDpi)
-      .fields('Sensitivity', context.user.sensitivity)
+      .fields('DPI', input.mouseDpi)
+      .fields('Sensitivity', input.sensitivity)
       .fields('CM/360', cm360)
       .footer()
       .send()
   },
   async help(context, message) {
+    let embed = new Embed(message);
 
-    message.embed = function() {
-      return new Embed(this);
+    if(!context.user || (!context.user.mouseDpi || !context.user.sensitivity)) {
+      embed.description(`Tip: Save your information with \`${settings.activator} save\``)
     }
 
-    message.embed()
-      .description('First save your information with the store command')
+    embed
+      .fields('Mouse DPI', 'Example: `dpi:800`')
+      .fields('Sensitivity', 'Example: `sense:7.5`')
       .footer()
       .send()
-
   }
 };

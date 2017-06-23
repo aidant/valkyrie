@@ -70,24 +70,21 @@ client.on('message', async message => {
 
   const command = router.route(parts);
   if (!command || !command.handler) {
-    message.channel.send(settings.voice_lines[Math.floor(Math.random()*settings.voice_lines.length)]);
     return;
   }
 
   if (command.restrictToServer && message.channel.type === 'text') {
     if (command.restrictToServer != message.channel.guild.id) {
-      message.channel.send(settings.voice_lines[Math.floor(Math.random()*settings.voice_lines.length)]);
       return;
     }
   }
 
   const context = await createContext(command, parts, message);
-  console.log(context);
 
   logInteraction(context, message);
 
   command
-    .handler(context, message)
+    .handler(context, message, client)
     .catch(e => {
       message.channel.send({ embed: {description: 'I require medical attention.', color: 15746887} })
       console.error(e);

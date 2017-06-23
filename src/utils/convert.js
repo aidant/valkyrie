@@ -32,6 +32,55 @@ const COLOR = {
     'Zenyatta': '15918711'
   };
 
-export default function (color) {
+export function convColor(color) {
   return COLOR[color];
 };
+
+const HEROES = {
+  'genji': 'Genji',
+  'mccree': 'McCree',
+  'pharah': 'Pharah',
+  'reaper': 'Reaper',
+  'soldier76': 'Soldier: 76',
+  'sombra': 'Sombra',
+  'tracer': 'Tracer',
+  'bastion': 'Bastion',
+  'hanzo': 'Hanzo',
+  'junkrat': 'Junkrat',
+  'mei': 'Mei',
+  'torbjorn': 'Torbjörn',
+  'widowmaker': 'Widowmaker',
+  'dva': 'D.va',
+  'orisa': 'Orisa',
+  'reinhardt': 'Reinhardt',
+  'roadhog': 'Roadhog',
+  'winston': 'Winston',
+  'zarya': 'Zarya',
+  'ana': 'Ana',
+  'lucio': 'Lúcio',
+  'mercy': 'Mercy',
+  'symmetra': 'Symmetra',
+  'zenyatta': 'Zenyatta'
+
+}
+
+export function convHeroName(hero) {
+  return HEROES[hero];
+}
+
+const STATS = {
+  'mercy': ['players_resurrected', 'healing_done', 'deaths', 'damage_amplified', 'offensive_assists', 'defensive_assists']
+}
+
+export function convHeroToStats(name) {
+  return STATS[name];
+};
+
+export function convNumber(num) {
+  if (num === undefined) { return; };
+  let parts = num.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+}
+
+
