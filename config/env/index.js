@@ -7,7 +7,7 @@ const rootPath = path.join(__dirname, '..', '..', '..');
 
 const defaults = {
   token: false,
-  activator: 'lazy',
+  activator: 'val',
   name: 'Valkyrie',
   role: '#f04747',
   footer: 'Built by LazyGamer & Akira',
