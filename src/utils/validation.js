@@ -33,7 +33,7 @@ export function valMouseDpi() {
 }
 
 export function valSensitivity() {
-  return Joi.string().regex(/^sense:([0-9]|[0-9].[0-9]{1,2})$/i);
+  return Joi.string().regex(/^sense:([0-9]{1,2}(.[0-9]{1,2})?|100(.0{1,2})?)$/i);
 }
 
 export function valIsAccountTagHidden() {

@@ -99,7 +99,7 @@ export default {
     embed
       .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')
       .fields('Region (optional)', '`us`, `eu`, `kr`, `xbl`, `psn`')
-      .fields('Gamemode (optional)', '`quickplay`, `qp` or `competitive`, `comp`')
+      .fields('Gamemode (optional)', '`quickplay`, (`qp`) or `competitive`, (`comp`)')
       .footer()
       .send(false)
   }

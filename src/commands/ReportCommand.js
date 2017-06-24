@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import Embed from '../utils/embed'
 import settings from '../../config/env';
 
-const hook = new Discord.WebhookClient('324078260948303873', '8pbG-_MA8lV58pUJFtRTqAAEjzt0j-69pNW00qs9_thjUIIH6BBrSiASmdxtEmA8Sxjg');
+const hook = new Discord.WebhookClient(settings.webhookClientId, settings.webhookToken);
 
 export default {
   command: ['report'],
