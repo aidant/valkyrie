@@ -30,6 +30,7 @@ function generateHelpIndex(command, message) {
   if (embed.embed.fields.length > 0) {
     embed
       .description(`For more detailed information about each command, type \`${settings.activator} help command-name\`\nExample: \`${settings.activator} help save\``)
+      .footer()
       .send(false);
   } else {
     message.embed = () => { return new Embed(message); };

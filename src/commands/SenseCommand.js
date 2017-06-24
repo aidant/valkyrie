@@ -34,7 +34,6 @@ export default {
       .fields('DPI', input.mouseDpi)
       .fields('Sensitivity', input.sensitivity)
       .fields('CM/360', cm360)
-      .footer()
       .send()
   },
   async help(context, message) {

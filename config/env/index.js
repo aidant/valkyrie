@@ -11,6 +11,7 @@ const defaults = {
   name: 'Valkyrie',
   role: '#f04747',
   footer: 'Built by LazyGamer & Akira',
+  databaseUri: 'nedb://' + path.join(rootPath, 'data'),
 };
 
 export default Object.assign(defaults, config);

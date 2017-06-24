@@ -15,7 +15,8 @@ export default {
   helpShort: 'Show off your Quickplay or Competitive stats.',
 
   async handler(context, message) {
-    let input = new Params(context, message).region().gamemode(true, 'competitive').accountTag(true).db().required().result
+    let params = new Params(context, message).region().gamemode(true, 'competitive').accountTag(true).db().required()
+    let input = params.result
     if(input.error) { return }
 
     rp({uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '-')}/${input.region || ''}`), json: true})
@@ -81,9 +82,9 @@ export default {
       })
       .catch(e => {
         console.error(e)
-        message.embed = () => { return new Embed(message); };
-        message.embed()
-          .description(`I've failed you.`)
+        params.embed
+          .color(15746887)
+          .description('Failed to find an account.')
           .send()
       });
 

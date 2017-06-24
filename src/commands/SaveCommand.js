@@ -31,10 +31,6 @@ export default {
 
     let embed = new Embed(message);
 
-    if(user.isAccountTagHidden === true) {
-      embed.description(`Warning ${settings.name} is currently in beta. If your BattleTag is shown anywhere please report it using \`${settings.activator} report\``)
-    }
-
     embed
       .author(message.author.username, null, message.author.avatarURL)
       .fields('Account', hideAccountTag(user.accountTag, user.isAccountTagHidden))
@@ -43,7 +39,6 @@ export default {
       .fields('Prefered Gamemode', user.gamemode)
       .fields('Sensitivity', user.sensitivity)
       .fields('Mouse DPI', user.mouseDpi)
-      .footer()
 
     if (embed.embed.fields.length < 1) {
         this.help(context, message)
