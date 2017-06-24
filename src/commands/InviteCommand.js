@@ -1,17 +1,15 @@
 import settings from '../../config/env';
-import { marginColour } from '../utils/colour';
+import Embed from '../utils/embed';
 
 export default {
   command: ['invite'],
-  helpShort: 'Generates an invite link',
+  helpShort: `Invite ${settings.name} to your server.`,
 
   async handler(context, message) {
-    let embed = {
-      color: marginColour('default'),
-      title: `Support has arrived.`,
-      url: `https://discordapp.com/oauth2/authorize?client_id=${settings.clientId}&scope=bot&permissions=67128384`,
-      footer: { text: settings.footer }
-    }
-    message.channel.sendMessage('', { embed });
+    message.embed = () => { return new Embed(message); };
+    message.embed()
+      .fields('Support has arrived', `[Invite ${settings.name} to your server.](https://discordapp.com/oauth2/authorize?permissions=67161153&scope=bot&client_id=${settings.clientId})`)
+      .footer()
+      .send()
   }
 };

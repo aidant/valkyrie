@@ -8,8 +8,9 @@ const rootPath = path.join(__dirname, '..', '..', '..');
 const defaults = {
   token: false,
   activator: 'val',
-  url: 'http://overcomp.akira.gg',
-  footer: 'Built by LazyGamer & AkiraYasha',
+  name: 'Valkyrie',
+  role: '#f04747',
+  footer: 'Built by LazyGamer & Akira',
   databaseUri: 'nedb://' + path.join(rootPath, 'data'),
 };
 

@@ -1,4 +1,4 @@
-const COLOUR = {
+const COLOR = {
     'default': '15746887',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png': '12346195',
     'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-2.png': '9013384',
@@ -18,7 +18,7 @@ const COLOUR = {
     'Hanzo': '11314812',
     'Junkrat': '15447619',
     'Mei': '6924778',
-    'Torbj&#xF6;rn': '12610659',
+    'Torbjörn': '12610659',
     'Widowmaker': '10117022',
     'D.Va': '15896259',
     'Reinhardt': '9608607',
@@ -26,12 +26,61 @@ const COLOUR = {
     'Winston': '9869491',
     'Zarya': '14577067',
     'Ana': '6981037',
-    'L&#xFA;cio': '8505156',
+    'Lúcio': '8505156',
     'Mercy': '15788215',
     'Symmetra': '8499654',
     'Zenyatta': '15918711'
   };
 
-export function marginColour(colour) {
-  return COLOUR[colour] || COLOUR['default'];
+export function convColor(color) {
+  return COLOR[color];
 };
+
+const HEROES = {
+  'genji': 'Genji',
+  'mccree': 'McCree',
+  'pharah': 'Pharah',
+  'reaper': 'Reaper',
+  'soldier76': 'Soldier: 76',
+  'sombra': 'Sombra',
+  'tracer': 'Tracer',
+  'bastion': 'Bastion',
+  'hanzo': 'Hanzo',
+  'junkrat': 'Junkrat',
+  'mei': 'Mei',
+  'torbjorn': 'Torbjörn',
+  'widowmaker': 'Widowmaker',
+  'dva': 'D.va',
+  'orisa': 'Orisa',
+  'reinhardt': 'Reinhardt',
+  'roadhog': 'Roadhog',
+  'winston': 'Winston',
+  'zarya': 'Zarya',
+  'ana': 'Ana',
+  'lucio': 'Lúcio',
+  'mercy': 'Mercy',
+  'symmetra': 'Symmetra',
+  'zenyatta': 'Zenyatta'
+
+}
+
+export function convHeroName(hero) {
+  return HEROES[hero];
+}
+
+const STATS = {
+  'mercy': ['players_resurrected', 'healing_done', 'deaths', 'damage_amplified', 'offensive_assists', 'defensive_assists']
+}
+
+export function convHeroToStats(name) {
+  return STATS[name];
+};
+
+export function convNumber(num) {
+  if (num === undefined) { return; };
+  let parts = num.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+}
+
+
