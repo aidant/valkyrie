@@ -53,6 +53,7 @@ export default {
         console.error(e)
         message.embed = () => { return new Embed(message); };
         message.embed()
+          .color(15746887)
           .description('Failed to send message.')
           .send()
       })

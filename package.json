@@ -1,7 +1,7 @@
 {
   "name": "valkyrie",
-  "version": "0.2.8",
-  "description": "An Overwatch discord stats bot",
+  "version": "0.1.0",
+  "description": "An Overwatch stats bot for Discord.",
   "main": "app.js",
   "scripts": {
     "start": "gulp serve",
@@ -12,7 +12,6 @@
     "url": "git+https://github.com/AidanT/Valkyrie.git"
   },
   "author": "LazyGamer",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/AidanT/Valkyrie/issues"
   },

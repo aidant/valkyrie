@@ -10,6 +10,7 @@ export default {
   async handler(context, message, client) {
     message.embed = () => { return new Embed(message); };
     message.embed()
+      .author(settings.name, 'https://github.com/AidanT/Valkyrie')
       .fields('Node Uptime', moment.duration(process.uptime(), 'seconds').humanize())
       .fields('Node Version', process.versions.node)
       .fields('Discord library', `${discordJsPackageInfo.name.charAt(0).toUpperCase() + discordJsPackageInfo.name.slice(1)} ${discordJsPackageInfo.version}`)
