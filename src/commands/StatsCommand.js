@@ -19,7 +19,9 @@ export default {
     let input = params.result
     if(input.error) { return }
 
-    rp({uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '-')}/${input.region || ''}`), json: true})
+    message.channel.startTyping()
+
+    rp({uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '~')}/${input.region || ''}`), json: true})
       .then(account => {
 
         let embed = new Embed(message);
@@ -78,6 +80,7 @@ export default {
             .attach(path.join(__dirname, '..', 'img', file), 'profile.png')
             .send(true)
         })
+        message.channel.stopTyping()
 
       })
       .catch(e => {
