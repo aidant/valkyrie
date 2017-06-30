@@ -1,6 +1,5 @@
 import { convHeroName, convNumber } from './convert';
 import fromSeconds from './fromSeconds';
-import jsonQuery from 'json-query';
 import moment from 'moment'
 require("moment-duration-format");
 
@@ -20,28 +19,28 @@ export function careerStats(stats, gamemode, hero) {
   let result = [];
 
   for (var i = 0; i < stats.length; i++) {
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations_most_in_game') {
       result.push(`Eliminations: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'final_blows_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'final_blows_most_in_game') {
       result.push(`Final Blows: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_kills_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_kills_most_in_game') {
       result.push(`Objective kills: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_time_most_in_game_seconds') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_time_most_in_game_seconds') {
       result.push(`Objective time: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'damage_done_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'damage_done_most_in_game') {
       result.push(`Damage done: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'healing_done_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'healing_done_most_in_game') {
       result.push(`Healing done: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'time_spent_on_fire_most_in_game_seconds') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'time_spent_on_fire_most_in_game_seconds') {
       result.push(`Time on fire: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'solo_kills_most_in_game') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'solo_kills_most_in_game') {
       result.push(`Solo kills: **${convNumber(stats[i].value)}**`)
     }
   }
@@ -54,22 +53,22 @@ export function combat(stats, gamemode, hero) {
   let tmp = {};
 
   for (var i = 0; i < stats.length; i++) {
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths') {
       tmp.deaths = stats[i].value;
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations') {
       tmp.eliminations = stats[i].value;
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'damage_done_average') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'damage_done_average') {
       result.push(`Avg. Damage done: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'healing_done_average') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'healing_done_average') {
       result.push(`Avg. Healing done: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths_average') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths_average') {
       result.push(`Avg. Deaths: **${convNumber(stats[i].value)}**`)
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations_average') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations_average') {
       result.push(`Avg. Eliminations: **${convNumber(stats[i].value)}**`)
     }
   }
@@ -84,15 +83,15 @@ export function qpGamesPL(stats, hero) {
   let heroData = {};
 
   for (var i = 0; i < stats.length; i++) {
-    if (stats[i].mode === 'quickplay' && stats[i].stat === 'healing_done') {
+    if (stats[i].gamemode === 'quickplay' && stats[i].stat === 'healing_done') {
       if (heroData[stats[i].hero] === undefined) { heroData[stats[i].hero] = []; };
       heroData[stats[i].hero][0] = stats[i].value
     }
-    if (stats[i].mode === 'quickplay' && stats[i].stat === 'healing_done_average') {
+    if (stats[i].gamemode === 'quickplay' && stats[i].stat === 'healing_done_average') {
       if (heroData[stats[i].hero] === undefined) { heroData[stats[i].hero] = []; };
       heroData[stats[i].hero][1] = stats[i].value
     }
-    if (stats[i].mode === 'quickplay' && stats[i].stat === 'games_won') {
+    if (stats[i].gamemode === 'quickplay' && stats[i].stat === 'games_won') {
       if (heroData[stats[i].hero] === undefined) { heroData[stats[i].hero] = []; };
       heroData[stats[i].hero][2] = stats[i].value
     }
@@ -114,10 +113,10 @@ export function kdRatio(stats, gamemode, hero) {
   let tmp = {};
 
   for (var i = 0; i < stats.length; i++) {
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'deaths') {
       tmp.deaths = stats[i].value;
     }
-    if (stats[i].mode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations') {
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'eliminations') {
       tmp.eliminations = stats[i].value;
     }
   }

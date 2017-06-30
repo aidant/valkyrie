@@ -23,7 +23,7 @@ function generateHelpIndex(command, message) {
     const child = command.children[name];
 
     if (!child.isHidden && child.helpShort) {
-      embed.fields(name.charAt(0).toUpperCase() + name.slice(1), child.helpShort)
+      embed.fields(`${settings.activator.charAt(0).toUpperCase()}${settings.activator.slice(1)} ${name.charAt(0).toUpperCase()}${name.slice(1)}`, child.helpShort)
     }
   });
 
