@@ -64,6 +64,7 @@ export default {
     message.embed()
       .description('Please include a small summary of your issue.')
       .fields('Example:', `\`${settings.activator} report No stats are shown for my battleTag, Tracer#3939.\``)
+      .footer()
       .send()
   }
 };
