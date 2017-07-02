@@ -3,6 +3,8 @@ import Discord from 'discord.js';
 import settings from '../config/env';
 import router from './commands';
 import User from './schema/User';
+import Embed from './utils/embed';
+import typing from './utils/typing';
 
 const DISCORD_USER_REF_REGEX = /^<@(\d+)>$/;
 
@@ -79,6 +81,8 @@ client.on('message', async message => {
     }
   }
 
+  message.typing = typing(message);
+  message.embed = () => { return new Embed(message); };
   const context = await createContext(command, parts, message);
 
   logInteraction(context, message);
@@ -86,7 +90,10 @@ client.on('message', async message => {
   command
     .handler(context, message, client)
     .catch(e => {
-      message.channel.send({ embed: {description: 'I require medical attention.', color: 15746887} })
+      message.embed()
+        .description('I require medical attention.')
+        .color(15746887)
+        .send()
       console.error(e);
     });
 });

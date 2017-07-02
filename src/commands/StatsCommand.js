@@ -1,7 +1,6 @@
 import rp from 'request-promise';
 import path from 'path';
 
-import Embed from '../utils/embed';
 import settings from '../../config/env';
 import fromSeconds from '../utils/fromSeconds';
 import profileImage from '../utils/profileImage';
@@ -18,13 +17,12 @@ export default {
     let params = new Params(context, message).region().gamemode(true, 'competitive').accountTag(true).db().required()
     let input = params.result
     if(input.error) { return }
-
-    message.channel.startTyping()
+    message.typing.start()
 
     rp({uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '~')}/${input.region || ''}`), json: true})
       .then(account => {
 
-        let embed = new Embed(message);
+        let embed = message.embed();
 
         if(account.competitive.rank === null) { account.competitive.rank = 'Unranked'; }
 
@@ -79,8 +77,8 @@ export default {
           embed
             .attach(path.join(__dirname, '..', 'img', file), 'profile.png')
             .send(true)
+            message.typing.stop()
         })
-        message.channel.stopTyping()
 
       })
       .catch(e => {
@@ -89,11 +87,12 @@ export default {
           .color(15746887)
           .description('Failed to find an account.')
           .send()
+        message.typing.stop()
       });
 
   },
   async help(context, message) {
-    let embed = new Embed(message);
+    let embed = message.embed();
 
     if(!context.user || (!context.user.accountTag)) {
       embed.description(`Tip: Save your information with \`${settings.activator} save\``)

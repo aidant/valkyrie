@@ -1,5 +1,4 @@
 import settings from '../../config/env';
-import Embed from '../utils/embed';
 
 const HELP = [
   "There's no prescription to treat what you have.",
@@ -16,7 +15,7 @@ function generateMercyQuote(message) {
 }
 
 function generateHelpIndex(command, message) {
-  let embed = new Embed(message);
+  let embed = message.embed();
 
   const children = Object.keys(command.children).sort();
   children.forEach(name => {
@@ -33,7 +32,6 @@ function generateHelpIndex(command, message) {
       .footer()
       .send(false);
   } else {
-    message.embed = () => { return new Embed(message); };
     message.embed()
       .description('There is no extra help information for this command.')
       .send()

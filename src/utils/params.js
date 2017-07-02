@@ -1,6 +1,5 @@
 import { valBattleTag, valOnlineID, valGamerTag, valRegion, valHeroes, valGamemode, valMouseDpi, valSensitivity, valIsAccountTagHidden, valDiscordId, valDebug } from './validation';
 import Joi from 'joi';
-import Embed from './embed';
 import hideAccountTag from './hideAccountTag';
 import User from '../schema/User'
 
@@ -13,7 +12,7 @@ export default class Params {
     this.triggered = {};
     this.default = {};
     this.error = false;
-    this.embed = new Embed(this.message);
+    this.embed = message.embed();
     this.embed.description('Mising one or more arguments.')
 
     for (var i = 0; i < this.context.params.length; i++) {

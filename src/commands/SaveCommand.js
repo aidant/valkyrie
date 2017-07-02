@@ -1,5 +1,4 @@
 import Params from '../utils/params';
-import Embed from '../utils/embed';
 import hideAccountTag from '../utils/hideAccountTag';
 import User from '../schema/User';
 import settings from '../../config/env/'
@@ -29,7 +28,7 @@ export default {
 
     await user.save();
 
-    let embed = new Embed(message);
+    let embed = message.embed();
 
     embed
       .author(message.author.username, null, message.author.avatarURL)
@@ -48,7 +47,6 @@ export default {
 
   },
   async help(context, message) {
-    message.embed = () => { return new Embed(message); };
     message.embed()
       .description('You can save one or more items at a time. Your information can always be updated later.')
       .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')

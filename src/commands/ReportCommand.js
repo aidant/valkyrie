@@ -9,13 +9,12 @@ export default {
   helpShort: 'Report issues, bugs or feature requests.',
 
   async handler(context, message) {
+    hook.embed = () => { return new Embed(hook); };
 
     if(context.params.length < 1) {
       this.help(context, message)
       return;
     }
-
-    hook.embed = () => { return new Embed(hook); };
 
     let channel = `<#${message.channel.id}>`;
     let links = `<@${message.author.id}>`
@@ -44,14 +43,12 @@ export default {
       .timestamp()
       .sendHook(false)
       .then(() => {
-        message.embed = () => { return new Embed(message); };
         message.embed()
           .description('Your message was sent!')
           .send()
       })
       .catch(e => {
         console.error(e)
-        message.embed = () => { return new Embed(message); };
         message.embed()
           .color(15746887)
           .description('Failed to send message.')
@@ -60,7 +57,6 @@ export default {
 
   },
   async help(context, message) {
-    message.embed = () => { return new Embed(message); };
     message.embed()
       .description('Please include a small summary of your issue.')
       .fields('Example:', `\`${settings.activator} report No stats are shown for my battleTag, Tracer#3939.\``)

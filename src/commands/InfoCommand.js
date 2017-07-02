@@ -1,5 +1,4 @@
 import settings from '../../config/env';
-import Embed from '../utils/embed';
 import moment from 'moment';
 import discordJsPackageInfo from 'discord.js/package';
 
@@ -8,7 +7,6 @@ export default {
   helpShort: `Information and statistics about ${settings.name}.`,
 
   async handler(context, message, client) {
-    message.embed = () => { return new Embed(message); };
     message.embed()
       .author(settings.name, 'https://github.com/AidanT/Valkyrie')
       .fields('Node Uptime', moment.duration(process.uptime(), 'seconds').humanize())
