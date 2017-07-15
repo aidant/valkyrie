@@ -26,22 +26,22 @@ export function careerStats(stats, gamemode, hero) {
       result.push(`Final Blows: **${convNumber(stats[i].value)}**`)
     }
     if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_kills_most_in_game') {
-      result.push(`Objective kills: **${convNumber(stats[i].value)}**`)
+      result.push(`Objective Kills: **${convNumber(stats[i].value)}**`)
     }
     if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'objective_time_most_in_game_seconds') {
-      result.push(`Objective time: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
+      result.push(`Objective Time: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
     }
-    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'damage_done_most_in_game') {
-      result.push(`Damage done: **${convNumber(stats[i].value)}**`)
+    if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'all_damage_done_most_in_game') {
+      result.push(`All Damage Done: **${convNumber(stats[i].value)}**`)
     }
     if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'healing_done_most_in_game') {
-      result.push(`Healing done: **${convNumber(stats[i].value)}**`)
+      result.push(`Healing Done: **${convNumber(stats[i].value)}**`)
     }
     if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'time_spent_on_fire_most_in_game_seconds') {
-      result.push(`Time on fire: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
+      result.push(`Time on Fire: **${moment.duration(stats[i].value, 'seconds').format('m:ss')}**`)
     }
     if (stats[i].gamemode === gamemode && stats[i].hero === hero && stats[i].stat === 'solo_kills_most_in_game') {
-      result.push(`Solo kills: **${convNumber(stats[i].value)}**`)
+      result.push(`Solo Kills: **${convNumber(stats[i].value)}**`)
     }
   }
 
