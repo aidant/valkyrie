@@ -5,74 +5,81 @@ import path from 'path';
 import { valHeroes } from './validation';
 import Joi from 'joi';
 
-export default function (border, star, hero, callback) {
-  if(!border) return;
+export default async function (border, star, hero, rank) {
+  if (!border) return null;
+  hero = Joi.validate(hero, valHeroes()).error === null ? hero : 'none';
+  rank = Joi.validate(rank, Joi.string().uri()).error === null ? rank : null;
+
   let files = {};
+  files.new = path.join(__dirname, '..', 'img', `${path.parse(border).name.split('_')[0]}_${hero}_${rank ? path.parse(rank).name : null}.png`);
+  if (fs.existsSync(files.new)) return files.new;
+  [files.border, files.star, files.rank] = await Promise.all([getImage(border), getImage(star), getImage(rank)]);
 
-  if(Joi.validate(hero, valHeroes()).error != null) {
-    hero = 'none'
+  let Image = Canvas.Image
+  let canvas = new Canvas(256, 256)
+  let ctx = canvas.getContext('2d')
+
+  let img = new Image()
+  img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'background.png'))
+  ctx.drawImage(img, 0, 0, img.width, img.height)
+
+  img = new Image()
+  img.src = fs.readFileSync(files.border)
+  ctx.drawImage(img, 0, 0, img.width, img.height)
+
+  if (files.star) {
+    img = new Image()
+    img.src = fs.readFileSync(files.star)
+    ctx.drawImage(img, 0, 128, img.width, img.height)
   }
 
-  files.border = border.split('/')
-  files.border = files.border[files.border.length - 1]
-  files.new = `${files.border.split('_')[0]}_${hero}.png`
+  img = new Image()
+  img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'heroes', `${hero}.png`))
+  ctx.drawImage(img, -8, -20, img.width / 2, img.height / 2)
 
-  if(fs.existsSync(path.join(__dirname, '..', 'img', files.new))){
-    callback(files.new);
-    return;
+  if (files.rank) {
+    img = new Image()
+    img.src = fs.readFileSync(files.rank)
+    ctx.drawImage(img, 256 / 2 - (img.width * 0.25 / 2), 155, img.width * 0.25, img.height * 0.25)
   }
 
-  request(border).pipe(fs.createWriteStream(path.join(__dirname, '..', 'img', files.border)))
-  .on('close', function() {
-    if(star) {
-      files.star = star.split('/')
-      files.star = files.star[files.star.length - 1]
-      request(star).pipe(fs.createWriteStream(path.join(__dirname, '..', 'img', files.star)))
-      .on('close', function(){
+  return saveImage(canvas, files.new);
 
-        let Image = Canvas.Image
-        let canvas = new Canvas(256, 256)
-        let ctx = canvas.getContext('2d')
+}
 
-        let img = new Image()
-        img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'background.png'))
-        ctx.drawImage(img, 0, 0, img.width, img.height)
+function getImage(url) {
+  return new Promise((resolve, reject) => {
 
-        img = new Image()
-        img.src = fs.readFileSync(path.join(__dirname, '..', 'img', files.border))
-        ctx.drawImage(img, 0, 0, img.width, img.height)
-
-        img = new Image()
-        img.src = fs.readFileSync(path.join(__dirname, '..', 'img', files.star))
-        ctx.drawImage(img, 0, 128, img.width, img.height)
-
-        img = new Image()
-        img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'heroes', `${hero}.png`))
-        ctx.drawImage(img, -8, -20, img.width / 2, img.height / 2)
-
-        canvas.createPNGStream().pipe(fs.createWriteStream(path.join(__dirname, '..', 'img', files.new)))
-        .on('close', function() {callback(files.new)})
-      })
-    } else {
-
-    let Image = Canvas.Image
-    let canvas = new Canvas(256, 256)
-    let ctx = canvas.getContext('2d')
-
-    let img = new Image()
-    img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'background.png'))
-    ctx.drawImage(img, 0, 0, img.width, img.height)
-
-    img = new Image()
-    img.src = fs.readFileSync(path.join(__dirname, '..', 'img', files.border))
-    ctx.drawImage(img, 0, 0, img.width, img.height)
-
-    img = new Image()
-    img.src = fs.readFileSync(path.join(__dirname, '..', 'img', 'heroes', `${hero}.png`))
-    ctx.drawImage(img, -8, -20, img.width / 2, img.height / 2)
-
-    canvas.createPNGStream().pipe(fs.createWriteStream(path.join(__dirname, '..', 'img', files.new)))
-    .on('close', function() {callback(files.new)})
+    if (Joi.validate(url, Joi.string().uri()).error != null) {
+      resolve(null);
+      return;
     }
+
+    const file = path.join(__dirname, '..', 'img', path.parse(url).base);
+    if (fs.existsSync(file)) {
+      resolve(file);
+      return;
+    }
+
+    request(url).pipe(fs.createWriteStream(file))
+      .on('close', () => {
+        resolve(file);
+      })
+      .on('error', e => {
+        reject(e);
+      })
+
   })
+}
+
+function saveImage(canvas, file) {
+  return new Promise((resolve, reject) => {
+    canvas.createPNGStream().pipe(fs.createWriteStream(file))
+      .on('close', () => {
+        resolve(file);
+      })
+      .on('error', e => {
+        reject(e);
+      })
+  });
 }

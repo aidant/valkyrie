@@ -20,65 +20,36 @@ export default {
     message.typing.start()
 
     rp({uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '~')}/${input.region || ''}`), json: true})
-      .then(account => {
+      .then(async account => {
 
-        let embed = message.embed();
+        const gm = input.gamemode === 'competitive';
+        if (account.competitive.rank === null) { account.competitive.rank = 'Unranked'; }
+        const image = await profileImage(account.images.portrait.border, account.images.portrait.star, account[input.gamemode].heroes.time_played_seconds[0].hero, input.gamemode === 'competitive' ? account.images.rank : null)
+        const qp = qpGamesPL(account.career_stats)
+        let games = [];
+        games.push(`Played: **${convNumber(gm ? account.competitive.games_played : qp.games_played)}**`)
+        games.push(`Won: **${convNumber(account[gm ? 'competitive' : 'quickplay'].games_won)}**`)
+        games.push(`Lost: **${convNumber(gm ? account.competitive.games_lost : qp.games_lost)}**`)
+        if (gm) games.push(`Tied: **${convNumber(account.competitive.games_tied)}**`);
+        games.push(`Winrate: **${Math.floor(account[gm ? 'competitive' : 'quickplay'].games_won / (gm ? account.competitive.games_played : qp.games_played) * 100)}**%`)
+        games = games.join(' \n');
 
-        if(account.competitive.rank === null) { account.competitive.rank = 'Unranked'; }
-
-        embed
+        message.embed()
           .author(input.accountTag.split('#')[0], account.profile.url, account.images.player_icon, input.isAccountTagHidden)
           .color(convColor(account.images.rank))
-          .footer(settings.name, account.images.rank)
+          .footer(settings.name, 'https://cdn.discordapp.com/avatars/248780846201438209/432e5dd48f8a6a93503c7d05a9f1cd8b.jpg')
           .timestamp()
-          .thumbnail('attachment://profile.png')
-
-        if(input.gamemode === 'quickplay') {
-          let qp = qpGamesPL(account.career_stats)
-          let qpGames = [];
-          qpGames.push(`Played: **${convNumber(qp.games_played)}**`)
-          qpGames.push(`Won: **${convNumber(account.quickplay.games_won)}**`)
-          qpGames.push(`Lost: **${convNumber(qp.games_lost)}**`)
-          qpGames.push(`Winrate: **${Math.floor(account.quickplay.games_won / qp.games_played * 100)}**%`)
-          qpGames = qpGames.join(' \n');
-
-          embed
-            .description('Quickplay Career Profile:')
-            .fields('Level', account.profile.level)
-            .fields('Total Time Played', fromSeconds(account.quickplay.time_played_seconds))
-            .fields('Career Best', careerStats(account.career_stats, 'quickplay', 'all'))
-            .fields('Time Played', mostPlayedHeroes(account.quickplay.heroes.time_played_seconds, 8))
-            //.fields('Combat', combat(account.career_stats, 'quickplay', 'all'))
-            .fields('Games', qpGames)
-            .fields('K/D Ratio', convNumber(kdRatio(account.career_stats, 'quickplay', 'all')))
-        }
-
-        if(input.gamemode === 'competitive') {
-          let compGames = [];
-          compGames.push(`Played: **${convNumber(account.competitive.games_played)}**`)
-          compGames.push(`Won: **${convNumber(account.competitive.games_won)}**`)
-          compGames.push(`Lost: **${convNumber(account.competitive.games_lost)}**`)
-          compGames.push(`Tied: **${convNumber(account.competitive.games_tied)}**`)
-          compGames.push(`Winrate: **${Math.floor(account.competitive.games_won / account.competitive.games_played * 100)}**%`)
-          compGames = compGames.join(' \n');
-
-          embed
-            .description('Competitive Career Profile:')
-            .fields('Skill Rating', account.competitive.rank)
-            .fields('Total Time Played', fromSeconds(account.competitive.time_played_seconds))
-            .fields('Career Best', careerStats(account.career_stats, 'competitive', 'all'))
-            .fields('Time Played', mostPlayedHeroes(account.competitive.heroes.time_played_seconds, 8))
-            //.fields('Combat', combat(account.career_stats, 'competitive', 'all'))
-            .fields('Games', compGames)
-            .fields('K/D Ratio', convNumber(kdRatio(account.career_stats, 'competitive', 'all')))
-        }
-
-        profileImage(account.images.portrait.border, account.images.portrait.star, account[input.gamemode].heroes.time_played_seconds[0].hero, function(file){
-          embed
-            .attach(path.join(__dirname, '..', 'img', file), 'profile.png')
-            .send(true)
-            message.typing.stop()
-        })
+          .thumbnail()
+          .description(gm ? 'Competitive Career Profile:' : 'Quickplay Career Profile:')
+          .fields(gm ? 'Skill Rating' : 'Level', gm ? account.competitive.rank : account.profile.level)
+          .fields('Total Time Played', fromSeconds(account[gm ? 'competitive' : 'quickplay'].time_played_seconds))
+          .fields('Career Best', careerStats(account.career_stats, gm ? 'competitive' : 'quickplay', 'all'))
+          .fields('Time Played', mostPlayedHeroes(account[gm ? 'competitive' : 'quickplay'].heroes.time_played_seconds, 8))
+          .fields('Games', games)
+          .fields('K/D Ratio', convNumber(kdRatio(account.career_stats, gm ? 'competitive' : 'quickplay', 'all')))
+          .attach(image)
+          .send(true)
+        message.typing.stop()
 
       })
       .catch(e => {
@@ -106,5 +77,3 @@ export default {
       .send(false)
   }
 };
-
-
