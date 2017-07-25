@@ -10,34 +10,20 @@ export default class Embed {
   }
 
   title(title){
-    if (title) {
-      this.embed.title = title;
-    }
+    if (Joi.validate(toStr(title), Joi.string()).error != null) return this;
+    this.embed.title = val;
     return this;
   }
 
   description(description) {
-    if(description) {
-      this.embed.description = description;
-    }
+    if (Joi.validate(toStr(description), Joi.string()).error != null) return this;
+    this.embed.description = description;
     return this;
   }
 
   url(link) {
-
-    const vLink = Joi.validate(link, Joi.string().uri(), function (err, value) {
-        if (err) {
-          console.log(err);
-          return false;
-        } else {
-          return value;
-        }
-      });
-
-    if (vLink) {
-    this.embed.url = vLink;
-    }
-
+    if (Joi.validate(link, Joi.string().uri()).error != null) return this;
+    this.embed.url = link;
     return this;
   }
 
@@ -54,33 +40,19 @@ export default class Embed {
   }
 
   footer(text, icon_url) {
-    this.embed.footer = {};
-    const schema = Joi.string().uri()
-
-    if (text) {
-      this.embed.footer.text = text;
-    } else {
-      this.embed.footer.text = settings.footer;
-    }
-
-    if (icon_url) {
-      this.embed.footer.icon_url = icon_url;
-    }
-
+    this.embed.footer = this.embed.footer || {};
+    this.embed.footer.text = Joi.validate(toStr(text), Joi.string()).error === null ? text : settings.footer;
+    this.embed.footer.icon_url = Joi.validate(icon_url, Joi.string().uri()).error === null ? icon_url : '';
     return this;
   }
 
   author(name, url, icon_url, hidden) {
-    this.embed.author = {};
-
-    if (name) {
-      this.embed.author.name = name;
+    this.embed.author = this.embed.author || {};
+    this.embed.author.name = Joi.validate(toStr(name), Joi.string()).error === null ? name : '';
+    this.embed.author.icon_url = Joi.validate(icon_url, Joi.string().uri()).error === null ? icon_url : '';
+    if (!hidden) {
+      this.embed.author.url = Joi.validate(url, Joi.string().uri()).error === null ? url : '';
     }
-    if(!hidden) {
-      this.embed.author.url = url;
-    }
-    this.embed.author.icon_url = icon_url;
-
     return this;
   }
 
@@ -92,22 +64,22 @@ export default class Embed {
   }
 
   image(url) {
-
+    url = url || 'attachment://unknown.png';
     this.embed.image = {};
-    this.embed.image.url = url;
-    return this
-
+    this.embed.image.url = Joi.validate(url, Joi.string().uri()).error === null ? url : '';
+    return this;
   }
 
   thumbnail(url) {
-
+    url = url || 'attachment://unknown.png';
     this.embed.thumbnail = {};
-    this.embed.thumbnail.url = url;
-    return this
-
+    this.embed.thumbnail.url = Joi.validate(url, Joi.string().uri()).error === null ? url : '';
+    return this;
   }
 
   attach(attachment, name) {
+    name = name || 'unknown.png';
+    name = Joi.validate(toStr(name), Joi.string()).error === null ? name : 'unknown.png';
     this.files.push({ attachment, name })
     return this
   }
@@ -134,4 +106,9 @@ export default class Embed {
     return this.message.send('', { embeds: [this.embed], files: this.files });
   }
 
+}
+
+function toStr(value) {
+  if (value === undefined) return undefined;
+  return String(value)
 }
