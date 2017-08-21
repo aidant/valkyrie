@@ -1,5 +1,4 @@
 import Params from '../utils/params';
-import hideAccountTag from '../utils/hideAccountTag';
 import User from '../schema/User';
 import settings from '../../config/env/'
 
@@ -9,8 +8,16 @@ export default {
 
   async handler(context, message) {
 
-    let input = new Params(context, message).gamemode().region().accountTag().mouseDpi().sensitivity().isAccountTagHidden().required().result
-    if (input.error) { return; };
+    let params = await Params(context, message, {
+      accountTag: true,
+      region: true,
+      gamemode: true,
+      sensitivity: true,
+      mouseDpi: true
+    })
+    console.log(params)
+    if (params.error) return;
+    let input = params.result;
 
     let user = await User.findOne({ discordId: message.author.id });
     if (!user) {
@@ -24,7 +31,6 @@ export default {
     if (input.sensitivity) { user.sensitivity = input.sensitivity };
     if (input.mouseDpi) { user.mouseDpi = input.mouseDpi };
     if (input.gamemode) { user.gamemode = input.gamemode };
-    if (input.isAccountTagHidden === true || input.isAccountTagHidden === false) { user.isAccountTagHidden = input.isAccountTagHidden };
 
     await user.save();
 
@@ -32,8 +38,7 @@ export default {
 
     embed
       .author(message.author.username, null, message.author.avatarURL)
-      .fields('Account', hideAccountTag(user.accountTag, user.isAccountTagHidden))
-      .fields('Hidden BattleTag', user.isAccountTagHidden)
+      .fields('Account', user.accountTag)
       .fields('Prefered Region', user.region)
       .fields('Prefered Gamemode', user.gamemode)
       .fields('Sensitivity', user.sensitivity)
@@ -49,13 +54,11 @@ export default {
   async help(context, message) {
     message.embed()
       .description('You can save one or more items at a time. Your information can always be updated later.')
-      .fields('Account', 'Nothing fancy, just your BattleTag, GamerTag or OnlineID')
-      .fields('Hidden BattleTag', '`hidden:true` or `hidden:false`\nWhen true your full BattleTag won\'t be shown.')
-      .fields('Region', '`us`, `eu`, `kr`, `xbl`, `psn`')
-      .fields('Gamemode', '`quickplay`, (`qp`) or `competitive`, (`comp`)')
+      .fields('Account', 'Any valid BattleTag, GamerTag or OnlineID')
+      .fields('Region', 'Americas or us, Europe or eu, Asia or kr, xbl, psn')
+      .fields('Gamemode', 'Quickplay or qp, Competitive or comp')
       .fields('Mouse DPI', 'Example: `dpi:800`')
       .fields('Sensitivity', 'Example: `sense:7.5`')
-      .footer()
       .send(false)
   },
 };

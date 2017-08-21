@@ -21,6 +21,5 @@ router
   .add(CatCommand)
   .add(HamsterCommand)
   .add(ReportCommand)
-;
 
 export default router;

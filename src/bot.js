@@ -46,15 +46,14 @@ async function createContext(command, parts, message) {
 }
 
 const client = new Discord.Client();
+const hook = new Discord.WebhookClient(settings.webhookClientId, settings.webhookToken);
+hook.embed = () => { return new Embed(hook); };
 
 client.on('ready', () => {
   router.report();
 
   client.user.setStatus('online');
-  client.user.setGame(`${settings.activator} help`);
-  //client.user.setAvatar('./Val-12.png')
-    //.then(user => console.log(`New avatar set!`))
-    //.catch(console.error);
+  client.user.setPresence({ game: { name: `${settings.activator} help`, type: 0 } });
   console.log(`${client.user.username} serving ${client.users.size} users in ${client.guilds.size} servers;`);
   for (const [key, guild] of client.guilds) {
   console.log(`[${key}]: ${guild.name}`)
@@ -91,9 +90,15 @@ client.on('message', async message => {
     .handler(context, message, client)
     .catch(e => {
       message.embed()
-        .description('I require medical attention.')
+        .description(`A wild error has occurred. Try reporting it with \`${settings.activator} report\``)
         .color(15746887)
         .send()
+      hook.embed()
+        .author(message.author.username, null, message.author.avatarURL)
+        .description(message.content)
+        .fields('Error', `${e}`)
+        .timestamp()
+        .sendHook()
       console.error(e);
     });
 });

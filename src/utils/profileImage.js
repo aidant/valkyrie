@@ -2,12 +2,10 @@ import Canvas from 'canvas';
 import fs from 'fs';
 import request from 'request';
 import path from 'path';
-import { valHeroes } from './validation';
 import Joi from 'joi';
 
 export default async function (border, star, hero, rank) {
   if (!border) return null;
-  hero = Joi.validate(hero, valHeroes()).error === null ? hero : 'none';
   rank = Joi.validate(rank, Joi.string().uri()).error === null ? rank : null;
 
   let files = {};

@@ -32,10 +32,17 @@ export default class Embed {
     return this;
   }
 
-  color(color) { //Needs work
-    if (color) {
-      this.embed.color = color
+  color(color) {
+    if (!color) return this;
+    if (Joi.validate(color, Joi.string().regex(/^#?[0-9A-Fa-f]{6}$/)).error === null) {
+      this.embed.color = parseInt(color.replace('#', ''), 16);
+      return this
     }
+    if (Joi.validate(color, Joi.number().min(0).max(16777215)).error === null) {
+      this.embed.color = color
+      return this
+    }
+
     return this;
   }
 
@@ -92,7 +99,11 @@ export default class Embed {
         fields[i].inline = true;
       }
     }
-    return this.message.channel.send('', { embed: this.embed, files: this.files });
+    this.message.channel.send('', { embed: this.embed, files: this.files })
+      .catch(e => {
+        this.message.channel.send(`A wild error has occurred. This is most likely due to limited permissions.`)
+      });
+    return this;
   }
 
   sendHook(inline) {

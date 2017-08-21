@@ -1,8 +1,12 @@
 import moment from 'moment';
 
-export default function (time) {
+// Humanizes secconds up to hours
 
+export default function (time, zero) {
+
+  if(!time && zero === true) return '0 Seconds'
   if(!time) return
+  if(time === 0 && zero == true) return '0 Seconds'
   if(time === 0) return 0
 
   if(time === 1) {

@@ -1,45 +1,51 @@
 import Joi from 'joi';
 
-export function valDiscordId() {
-  return Joi.string().regex(/^<@[0-9]+>$/);
+export const regex = {
+  battleTag: /\b([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12})(#[0-9]{4,6})(?=\s|$)/g,
+  onlineID: /\b([a-zA-Z]{1}[a-zA-Z0-9_-]{2,15})(?=\s|$)/g,
+  gamerTag: /\b[a-zA-Z]{1}([a-zA-Z0-9 ]{0,13}[a-zA-Z]{1})?(?=\s|$)/g,
+  hero: /\b(doomfist|genji|mccree|pharah|reaper|soldier:? ?(76)?|sombra|tracer|bastion|hanzo|junkrat|mei|torb(j(o|\u00F6)rn)?|widow(maker)?|dva|orisa|rein(hardt)?|roadhog|winston|zarya|ana|l(u|\u00FA)cio|mercy|sym(metra)?|zen(yatta)?)(?=\s|$)/ig,
+  gamemode: /\b(qp|quick(play)?|comp(etitive)?)(?=\s|$)/ig,
+  region: /\b(eu|europe|us|americas?|kr|asia|psn|xbl)(?=\s|$)/ig,
+  discordID: /<@[0-9]+>(?=\s|$)/g,
+  sensitivity: /\bsens(e|itivity) ([0-9]{1,2}(\.[0-9]{1,2})?|100(\.0{1,2})?)(?=\s|$)/ig,
+  mouseDpi: /\b(d|c)pi ([0-9]{1,5}|[0-9]{1,2},[0-9]{2,3})(?=\s|$)/ig
 }
 
-export function valRegion() {
-  return Joi.string().lowercase().valid('eu', 'us', 'kr', 'psn', 'xbl');
+export const accountTag = Joi.alternatives().try(battleTag(), onlineID(), gamerTag());
+
+export function discordID() {
+  return Joi.string().regex(regex.discordID);
 }
 
-export function valBattleTag() {
-  return Joi.string().regex(/^[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12}(#)[0-9]{4,6}$/);
+export function region() {
+  return Joi.string().regex(regex.region);
 }
 
-export function valOnlineID() {
-  return Joi.string().regex(/^[A-Za-z]{1}[A-Za-z0-9_-]{2,15}$/);
+export function battleTag() {
+  return Joi.string().regex(regex.battleTag);
 }
 
-export function valGamerTag() {
-  return Joi.string().regex(/^[A-Za-z]{1}[A-Za-z0-9]{0,14}$/);
+export function onlineID() {
+  return Joi.string().regex(regex.onlineID);
 }
 
-export function valHeroes() {
-  return Joi.string().lowercase().valid('genji', 'mccree', 'pharah', 'reaper', 'soldier76', 'sombra', 'tracer', 'bastion', 'Hanzo', 'junkrat', 'mei', 'torbjorn', 'widowmaker', 'dva', 'orisa', 'reinhardt', 'roadhog', 'winston', 'zarya', 'ana', 'lucio', 'mercy', 'symmetra', 'zenyatta');
+export function gamerTag() {
+  return Joi.string().regex(regex.gamerTag);
 }
 
-export function valGamemode() {
-  return Joi.string().lowercase().valid('quickplay', 'competitive', 'qp', 'comp');
+export function hero() {
+  return Joi.string().regex(regex.hero);
 }
 
-export function valMouseDpi() {
-  return Joi.string().regex(/^dpi:[0-9]+$/i);
+export function gamemode() {
+  return Joi.string().regex(regex.gamemode);
 }
 
-export function valSensitivity() {
-  return Joi.string().regex(/^sense:([0-9]{1,2}(.[0-9]{1,2})?|100(.0{1,2})?)$/i);
+export function mouseDpi() {
+  return Joi.string().regex(regex.mouseDpi);
 }
 
-export function valIsAccountTagHidden() {
-  return Joi.string().regex(/^hidden:(false|true)$/i);
-}
-
-export function valDebug() {
-  return Joi.string().regex(/^debug:true$/i);
+export function sensitivity() {
+  return Joi.string().regex(regex.sensitivity);
 }
