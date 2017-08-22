@@ -1,4 +1,5 @@
 import * as convert from './convert';
+import * as slurp from './statsLookup';
 import fromSeconds from './fromSeconds';
 import moment from 'moment';
 import 'moment-duration-format';
@@ -20,34 +21,32 @@ export default function stats(account, input) {
     .thumbnail()
     .author(input.accountTag.split('#')[0], account.profile.url, account.images.player_icon, input.isAccountTagHidden)
     .description(`${gmComp ? 'Competitive' : 'Quickplay'} Career Profile: ${ hero === 'all' ? '' : convert.heroName(hero)}`)
-    .color(convert.color(account.images.rank))
     .footer(settings.name, 'https://blzgdapipro-a.akamaihd.net/game/unlocks/0x0250000000000C40.png')
-    .fields(gmComp ? 'Skill Rating' : 'Level', gmComp ? account.competitive.rank : account.profile.level)
+    .fields(gmComp ? 'Skill Rating' : 'Level', gmComp ? account.competitive.rank || 'Unranked' : account.profile.level, true)
 
   if (hero === 'all') {
     embed
-      .fields('Total Time Played', fromSeconds(account[gamemode].time_played_seconds, true))
-      .color(gmQp ? account.images.color[account[input.gamemode].heroes.time_played_seconds[0].hero] : convert.color(account.images.rank))
+      .fields('Total Time Played', fromSeconds(account[gamemode].time_played_seconds, true), true)
+      .color(account.images.color[account[input.gamemode].heroes.time_played_seconds[0].hero])
   } else {
     embed
-      .fields('Time Played', fromSeconds(_.find(account[gamemode].heroes.time_played_seconds, { hero }).value, true))
-      .color(gmQp ? account.images.color[hero] : convert.color(account.images.rank))
+      .fields('Time Played', fromSeconds(_.find(account[gamemode].heroes.time_played_seconds, { hero }).value, true), true)
+      .color(account.images.color[hero])
   }
-
-  embed
-    .fields('Career Best', careerBest(account, gamemode, hero))
 
     if (hero === 'all') {
       embed
-        .fields('Time Played', mostPlayedHeroes(account[gamemode].heroes.time_played_seconds, 8))
+        .fields('Career Best', careerBest(account, gamemode, hero), true)
+        .fields('Time Played', mostPlayedHeroes(account[gamemode].heroes.time_played_seconds, 8), true)
     } else {
       embed
-        .fields('Career Average', '\u200B')
+      .fields('Career Best', careerBest(account, gamemode, hero), false)
+      //.fields('Career Avg per 10 Min', careerAverage(account, gamemode, hero))
     }
 
   embed
-    .fields('Games', games(account, gamemode, hero))
-    .fields('K.D Ratio', kdRatio(account.career_stats, gamemode, hero))
+    .fields('Games', games(account, gamemode, hero), true)
+    .fields('K.D Ratio', kdRatio(account.career_stats, gamemode, hero), true)
 
 
   return embed
@@ -56,24 +55,42 @@ export default function stats(account, input) {
 
 export function careerBest(account, gamemode, hero) {
   let result = [];
-  let stats = convert.heroToStats(hero);
+  let stats = slurp.careerBest(hero);
   stats.forEach((val, i, obj) => {
-    let tmp = _.find(account.career_stats, { gamemode, hero, stat: Object.keys(val)[0]}) || { value: 0 };
-    result.push(`${val[Object.keys(val)]}: **${tmp.value}**`)
+    let tmp = _.find(account.career_stats, { gamemode, hero, stat: val.stat}) || { value: 0 };
+    result.push(`${val.name}: **${humanize(tmp)}**`)
   })
   return result.join('\n')
 }
 
-export function humanize(val) {
+export function careerAverage(account, gamemode, hero) {
+  let result = [];
+  let stats = slurp.careerAverage(hero);
+  stats.forEach((val, i, obj) => {
+    let tmp = {};
+    tmp.stat = _.find(account.career_stats, { gamemode, hero, stat: val.stat}) || { value: 0 };
+    tmp.time = _.find(account.career_stats, { gamemode, hero, stat: 'time_played_seconds'}) || { value: 0 };
 
-  let time = false;
-  let accucacy = false;
-
-  val.stat.split('_').forEach(val => {
-
+    tmp.number = Math.round(tmp.stat.value / tmp.time.value * 60 * 10)
+    result.push(`${val.name}: **${humanize({ value: tmp.number, stat: val.stat})}**`)
   })
+  return result.join('\n')
+}
 
-  return convert.number(val.value);
+export function humanize(obj) {
+
+  let time = /seconds$/.test(obj.stat)
+  let accuracy = /accuracy/.test(obj.stat)
+
+  if (time) {
+    return moment.duration(obj.value, 'seconds').format('m:ss')
+  }
+
+  if (accuracy) {
+    return stats.value * 100
+  }
+
+  return convert.number(obj.value);
 }
 
 export function mostPlayedHeroes(data, num) {

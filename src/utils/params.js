@@ -102,6 +102,7 @@ export default async function (context, message, options) {
           .replace(/^torb$/, 'torbjorn')
           .replace(/^widow$/, 'widowmaker')
           .replace(/^sym$/, 'symmetra')
+          .replace(/^junk$/, 'junkrat')
       })
     }
   }

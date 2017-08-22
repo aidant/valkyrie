@@ -15,7 +15,6 @@ export default {
       sensitivity: true,
       mouseDpi: true
     })
-    console.log(params)
     if (params.error) return;
     let input = params.result;
 
@@ -57,8 +56,8 @@ export default {
       .fields('Account', 'Any valid BattleTag, GamerTag or OnlineID')
       .fields('Region', 'Americas or us, Europe or eu, Asia or kr, xbl, psn')
       .fields('Gamemode', 'Quickplay or qp, Competitive or comp')
-      .fields('Mouse DPI', 'Example: `dpi:800`')
-      .fields('Sensitivity', 'Example: `sense:7.5`')
+      .fields('Mouse DPI', 'Example: `dpi 800`')
+      .fields('Sensitivity', 'Example: `sense 7.5`')
       .send(false)
   },
 };

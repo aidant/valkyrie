@@ -44,7 +44,7 @@ export default {
       embed.message = message
       embed
         .attach(image)
-        .send(true)
+        .send(false)
       message.typing.stop()
 
     } catch (e) {

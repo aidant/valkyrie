@@ -63,9 +63,10 @@ export default class Embed {
     return this;
   }
 
-  fields(name, value) {
+  fields(name, value, inline) {
     if (name && value) {
-      this.embed.fields.push({name, value: String(value), inline: false});
+      inline = inline ? true : false
+      this.embed.fields.push({name, value: String(value), inline});
     }
     return this;
   }
@@ -93,12 +94,12 @@ export default class Embed {
 
   send(inline) {
     let fields = this.embed.fields;
-
     if((inline != false && (fields.length % 2 == 0 || fields.length % 3 == 0)) || inline === true) {
       for (var i = fields.length - 1; i >= 0; i--) {
         fields[i].inline = true;
       }
     }
+
     this.message.channel.send('', { embed: this.embed, files: this.files })
       .catch(e => {
         this.message.channel.send(`A wild error has occurred. This is most likely due to limited permissions.`)
