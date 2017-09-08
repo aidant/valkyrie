@@ -44,9 +44,8 @@ export default {
     }
 
     embed
-      .fields('Mouse DPI', 'Example: `dpi:800`')
-      .fields('Sensitivity', 'Example: `sense:7.5`')
-      .footer()
+      .fields('Mouse DPI', 'Example: `dpi 800`')
+      .fields('Sensitivity', 'Example: `sense 7.5`')
       .send()
   }
 };
