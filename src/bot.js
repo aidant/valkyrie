@@ -3,6 +3,8 @@ import Discord from 'discord.js';
 import settings from '../config/env';
 import router from './commands';
 import User from './schema/User';
+import Embed from './utils/embed';
+import typing from './utils/typing';
 
 const DISCORD_USER_REF_REGEX = /^<@(\d+)>$/;
 
@@ -44,15 +46,14 @@ async function createContext(command, parts, message) {
 }
 
 const client = new Discord.Client();
+const hook = new Discord.WebhookClient(settings.webhookClientId, settings.webhookToken);
+hook.embed = () => { return new Embed(hook); };
 
 client.on('ready', () => {
   router.report();
 
   client.user.setStatus('online');
-  client.user.setGame(`${settings.activator} help`);
-  //client.user.setAvatar('./Val-12.png')
-    //.then(user => console.log(`New avatar set!`))
-    //.catch(console.error);
+  client.user.setPresence({ game: { name: `${settings.activator} help`, type: 0 } });
   console.log(`${client.user.username} serving ${client.users.size} users in ${client.guilds.size} servers;`);
   for (const [key, guild] of client.guilds) {
   console.log(`[${key}]: ${guild.name}`)
@@ -79,6 +80,8 @@ client.on('message', async message => {
     }
   }
 
+  message.typing = typing(message);
+  message.embed = () => { return new Embed(message); };
   const context = await createContext(command, parts, message);
 
   logInteraction(context, message);
@@ -86,7 +89,16 @@ client.on('message', async message => {
   command
     .handler(context, message, client)
     .catch(e => {
-      message.channel.send({ embed: {description: 'I require medical attention.', color: 15746887} })
+      message.embed()
+        .description(`A wild error has occurred. Try reporting it with \`${settings.activator} report\``)
+        .color(15746887)
+        .send()
+      hook.embed()
+        .author(message.author.username, null, message.author.avatarURL)
+        .description(message.content)
+        .fields('Error', `${e}`)
+        .timestamp()
+        .sendHook()
       console.error(e);
     });
 });

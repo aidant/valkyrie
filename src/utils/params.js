@@ -1,211 +1,248 @@
-import { valBattleTag, valOnlineID, valGamerTag, valRegion, valHeroes, valGamemode, valMouseDpi, valSensitivity, valIsAccountTagHidden, valDiscordId, valDebug } from './validation';
+import * as val from './validation';
 import Joi from 'joi';
-import Embed from './embed';
-import hideAccountTag from './hideAccountTag';
 import User from '../schema/User'
+import * as convert from './convert';
 
-export default class Params {
-  constructor(context, message) {
-    this.context = context;
-    this.message = message;
-    this.result = {};
-    this.require = {};
-    this.triggered = {};
-    this.default = {};
-    this.error = false;
-    this.embed = new Embed(this.message);
-    this.embed.description('Mising one or more arguments.')
+export default async function (context, message, options) {
+  let msg = context.params.join(' ');
+  let node = {
+    accountTag: [],
+    battleTag: [],
+    gamerTag: [],
+    onlineID: [],
+    hero: [],
+    gamemode: [],
+    region: [],
+    sensitivity: [],
+    mouseDpi: []
+  };
+  let misc = {
+    hero: []
+  };
+  let error = null;
+  let embed = message.embed();
+  embed.description('Missing one or more parameters.')
+  let mentionsTriggerd = false;
 
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valDebug()).error === null) {
-        this.error = true;
-        this.context.params.splice(i, 1)
+  //parse the input.
+
+  if (options.sensitivity) {
+    if (Joi.validate(msg, val.sensitivity()).error === null) {
+      node.sensitivity = msg.match(val.regex.sensitivity)
+      msg = msg.replace(val.regex.sensitivity, '')
+
+      node.sensitivity = node.sensitivity.map(val => {
+        val = val
+          .toLowerCase()
+          .replace(/^sens(e|itivity)/, '')
+        return parseFloat(val)
+      })
+    }
+  }
+
+  if (options.mouseDpi) {
+    if (Joi.validate(msg, val.mouseDpi()).error === null) {
+      node.mouseDpi = msg.match(val.regex.mouseDpi)
+      msg = msg.replace(val.regex.mouseDpi, '')
+
+      node.mouseDpi = node.mouseDpi.map(val => {
+        val = val
+          .toLowerCase()
+          .replace(/^(c|d)pi/, '')
+          .replace(/,/g, '')
+        return parseFloat(val)
+      })
+    }
+  }
+
+  if (options.gamemode) {
+    if (Joi.validate(msg, val.gamemode()).error === null) {
+      node.gamemode = msg.match(val.regex.gamemode)
+      msg = msg.replace(val.regex.gamemode, '')
+
+      node.gamemode = node.gamemode.map(val => {
+        return val
+          .toLowerCase()
+          .replace(/^qp|quick$/, 'quickplay')
+          .replace(/^comp$/, 'competitive')
+      })
+    }
+  }
+
+  if (options.region) {
+    if (Joi.validate(msg, val.region()).error === null) {
+      node.region = msg.match(val.regex.region)
+      msg = msg.replace(val.regex.region, '')
+
+      node.region = node.region.map(val => {
+        return val
+          .toLowerCase()
+          .replace(/^europe$/, 'eu')
+          .replace(/^americas?$/, 'us')
+          .replace(/^asia$/, 'kr')
+      })
+    }
+  }
+
+  if (options.hero) {
+    if (Joi.validate(msg, val.hero()).error === null) {
+      node.hero = msg.match(val.regex.hero)
+      msg = msg.replace(val.regex.hero, '')
+
+      misc.hero = node.hero;
+      node.hero = node.hero.map(val => {
+        return val
+          .toLowerCase()
+          .replace(/ |:|\./g, '')
+          .replace('ö', 'o')
+          .replace('ú', 'u')
+          .replace(/^soldier$/, 'soldier76')
+          .replace(/^rein$/, 'reinhardt')
+          .replace(/^zen$/, 'zenyatta')
+          .replace(/^torb$/, 'torbjorn')
+          .replace(/^widow$/, 'widowmaker')
+          .replace(/^sym$/, 'symmetra')
+          .replace(/^junk$/, 'junkrat')
+      })
+    }
+  }
+
+  if (options.accountTag) {
+    if (val.accountTag.validate(msg).error === null) {
+      let tmp = {};
+      tmp.battleTag = msg.match(val.regex.battleTag)
+      tmp.gamerTag = msg.match(val.regex.gamerTag)
+      tmp.onlineID = msg.match(val.regex.onlineID)
+
+      if (tmp.battleTag) {
+        node.battleTag.push(...tmp.battleTag);
+        node.accountTag.push(...tmp.battleTag);
+      }
+
+      if (tmp.gamerTag) {
+        node.gamerTag.push(...tmp.gamerTag);
+        node.accountTag.push(...tmp.gamerTag);
+      }
+
+      if (tmp.onlineID) {
+        node.onlineID.push(...tmp.onlineID);
+        node.accountTag.push(...tmp.onlineID);
+      }
+
+    }
+  }
+
+  if (options.mentions) {
+    if (Joi.validate(msg, val.discordID()).error === null) {
+      node.mentions = msg.match(val.regex.discordID)
+      msg = msg.replace(val.regex.discordID, '')
+
+      node.mentions = node.mentions.map(val => {
+        return val.replace(/<|>|@/g, '')
+      })
+
+      let user = await User.findOne({ discordId: node.mentions[0] })
+      mentionsTriggerd = true;
+
+      if (user) {
+        if (user.region && user.accountTag && node.accountTag.length < 1) node.region.push(user.region);
+        if (user.accountTag) node.accountTag.push(user.accountTag);
+        if (user.gamemode) node.gamemode.push(user.gamemode);
+        if (user.mouseDpi) node.mouseDpi.push(user.mouseDpi);
+        if (user.sensitivity) node.sensitivity.push(user.sensitivity);
       }
     }
-
   }
 
-  accountTag(required) {
-    this.require.accountTag = required;
-    this.triggered.accountTag = true;
+  if (options.db && context.user && !mentionsTriggerd) {
+    if (context.user.region && context.user.accountTag && node.accountTag.length < 1) node.region.push(context.user.region);
+    if (context.user.accountTag) node.accountTag.push(context.user.accountTag);
+    if (context.user.gamemode) node.gamemode.push(context.user.gamemode);
+    if (context.user.mouseDpi) node.mouseDpi.push(context.user.mouseDpi);
+    if (context.user.sensitivity) node.sensitivity.push(context.user.sensitivity);
+  }
 
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valBattleTag()).error === null || Joi.validate(this.context.params[i], valOnlineID()).error === null || Joi.validate(this.context.params[i], valGamerTag()).error === null) {
-        this.result.accountTag = this.context.params[i]
-        this.context.params.splice(i, 1)
+  //validate the output.
+
+  if (options.accountTag) {
+    if (node.accountTag.length < 1 && options.accountTag.default) node.accountTag.push(...options.accountTag.default);
+    if (options.accountTag.required === true && node.accountTag.length < 1) {
+      if (node.hero.length > 0) {
+        let match = false;
+        misc.hero.forEach((obj, i) => {
+          if (!match && !/\u00F6|\u00FA/ig.test(obj)) {
+            let tmp = {
+              gamerTag: [],
+              onlineID: []
+            };
+            tmp.xbl = obj.match(val.regex.gamerTag)
+            tmp.psn = obj.match(val.regex.onlineID)
+
+            if (tmp.xbl) {
+              tmp.gamerTag.push(...tmp.xbl)
+              match = true;
+            }
+
+            if (tmp.psn) {
+              tmp.onlineID.push(...tmp.psn)
+              match = true;
+            }
+
+            if (match) {
+              node.hero.splice(i, 1);
+              if (tmp.gamerTag.length > 0) node.accountTag.push(...tmp.gamerTag);
+              if (tmp.onlineID.length > 0) node.accountTag.push(...tmp.onlineID);
+            }
+          }
+        })
       }
+      if (node.accountTag.length < 1) error = true;
     }
-
-    return this
+    if (options.accountTag.required === true || node.accountTag.length > 0) embed.fields('Account', node.accountTag[0] || 'None Provided');
   }
 
-  gamemode(required, mode) {
-    this.require.gamemode = required;
-    this.triggered.gamemode = true;
-    this.default.gamemode = mode;
-
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valGamemode()).error === null) {
-        this.result.gamemode = this.context.params[i].toLowerCase().replace('qp', 'quickplay').replace('comp', 'competitive')
-        this.context.params.splice(i, 1)
-      }
-    }
-
-    return this
+  if (options.hero) {
+    if (node.hero.length < 1 && options.hero.default) node.hero.push(...options.hero.default);
+    if (options.hero.required === true && node.hero.length < 1) error = true;
+    if (node.hero[0] != 'all' && (options.hero.required === true || node.hero.length > 0)) embed.fields('Hero', convert.heroName(node.hero[0]) || 'None Provided');
   }
 
-  region(required) {
-    this.require.region = required;
-    this.triggered.region = true;
-
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valRegion()).error === null) {
-        this.result.region = this.context.params[i].toLowerCase()
-        this.context.params.splice(i, 1)
-      }
-    }
-
-    return this
+  if (options.gamemode) {
+    if (node.gamemode.length < 1 && options.gamemode.default) node.gamemode.push(...options.gamemode.default);
+    if (options.gamemode.required === true && node.gamemode.length < 1) error = true;
+    if (options.gamemode.required === true || node.gamemode.length > 0) embed.fields('Gamemode', convert.gamemode(node.gamemode[0]) || 'None Provided');
   }
 
-  hero(required) {
-    this.require.hero = required;
-    this.triggered.hero = true;
-
-    for (var i = 0; i < this.context.params.length; i++) {
-      let hero = this.context.params[i].toLowerCase()
-      hero = hero
-        .replace(/:|./g, '')
-        .replace('ö', 'o')
-        .replace('ú', 'u')
-      if(Joi.validate(hero, valHeroes()).error === null) {
-        this.result.hero = hero
-        this.context.params.splice(i, 1)
-      }
-    }
-
-    return this
+  if (options.region) {
+    if (node.region.length < 1 && options.region.default) node.region.push(...options.region.default);
+    if (options.region.required === true && node.region.length < 1) error = true;
+    if (options.region.required === true || node.region.length > 0) embed.fields(node.region[0] === 'psn' || node.region[0] === 'xbl' ? 'Platform' : 'Region', convert.region(node.region[0]) || 'None Provided');
   }
 
-  mouseDpi(required) {
-    this.require.mouseDpi = required;
-    this.triggered.mouseDpi = true;
-
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valMouseDpi()).error === null) {
-        this.result.mouseDpi = parseFloat(this.context.params[i].split(':')[1]);
-        this.context.params.splice(i, 1)
-      }
-    }
-
-    return this
+  if (options.sensitivity) {
+    if (node.sensitivity.length < 1 && options.sensitivity.default) node.sensitivity.push(...options.sensitivity.default);
+    if (options.sensitivity.required === true && node.sensitivity.length < 1) error = true;
+    if (options.sensitivity.required === true || node.sensitivity.length > 0) embed.fields('Sensitivity', node.sensitivity[0] || 'None Provided');
   }
 
-  sensitivity(required) {
-    this.require.sensitivity = required;
-    this.triggered.sensitivity = true;
-
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valSensitivity()).error === null) {
-        this.result.sensitivity = parseFloat(this.context.params[i].split(':')[1]);
-        this.context.params.splice(i, 1)
-      }
-    }
-
-    return this
+  if (options.mouseDpi) {
+    if (node.mouseDpi.length < 1 && options.mouseDpi.default) node.mouseDpi.push(...options.mouseDpi.default);
+    if (options.mouseDpi.required === true && node.mouseDpi.length < 1) error = true;
+    if (options.mouseDpi.required === true || node.mouseDpi.length > 0) embed.fields('Mouse DPI', node.mouseDpi[0] || 'None Provided');
   }
 
-  isAccountTagHidden(required) {
-    this.require.isAccountTagHidden = required;
-    this.triggered.isAccountTagHidden = true;
+  if (error) embed.send();
+  return { embed, error, result: {
+    accountTag: node.accountTag[0],
+    battleTag: node.battleTag[0],
+    gamerTag: node.gamerTag[0],
+    onlineID: node.onlineID[0],
+    hero: node.hero[0],
+    gamemode: node.gamemode[0],
+    region: node.region[0],
+    sensitivity: node.sensitivity[0],
+    mouseDpi: node.mouseDpi[0]
+  }, all: node}
 
-    for (var i = 0; i < this.context.params.length; i++) {
-      if(Joi.validate(this.context.params[i], valIsAccountTagHidden()).error === null) {
-        this.result.isAccountTagHidden = this.context.params[i].split(':')[1];
-        if(this.result.isAccountTagHidden === 'false') {
-          this.result.isAccountTagHidden = false;
-        }
-        if(this.result.isAccountTagHidden === 'true') {
-          this.result.isAccountTagHidden = true;
-        }
-        this.context.params.splice(i, 1)
-      }
-    }
-    return this
-  }
 
-  db() {
-    if(!this.context.user) { return this };
-    if(!this.result.accountTag && !this.result.region) {
-      this.result.accountTag = this.context.user.accountTag
-      this.result.region = this.context.user.region
-      this.result.isAccountTagHidden = this.context.user.isAccountTagHidden
-    }
-    if(!this.result.accountTag) {
-      this.result.accountTag = this.context.user.accountTag
-      this.result.isAccountTagHidden = this.context.user.isAccountTagHidden
-    }
-    if(!this.result.gamemode) {
-      this.result.gamemode = this.context.user.gamemode
-    }
-    if(!this.result.mouseDpi) {
-      this.result.mouseDpi = this.context.user.mouseDpi
-    }
-    if(!this.result.sensitivity) {
-      this.result.sensitivity = this.context.user.sensitivity
-    }
-    return this
-  }
-
-  required() {
-    this.result.gamemode = this.result.gamemode || this.default.gamemode;
-
-    if (this.require.accountTag && !this.result.accountTag) {
-      this.embed.fields('Account', 'None provided')
-      this.error = true;
-    } else if (this.triggered.accountTag){
-      this.embed.fields('Account', hideAccountTag(this.result.accountTag, this.result.isAccountTagHidden))
-    }
-
-    if (this.require.gamemode && !this.result.gamemode) {
-      this.embed.fields('Gamemode', 'None provided')
-      this.error = true;
-    } else if (this.triggered.gamemode){
-      this.embed.fields('Gamemode', this.result.gamemode)
-    }
-
-    if (this.require.region && !this.result.region) {
-      this.embed.fields('Region', 'None provided')
-      this.error = true;
-    } else if (this.triggered.region){
-      this.embed.fields('Region', this.result.region)
-    }
-
-    if (this.require.hero && !this.result.hero) {
-      this.embed.fields('Hero', 'None provided')
-      this.error = true;
-    } else if (this.triggered.hero){
-      this.embed.fields('Hero', this.result.hero)
-    }
-
-    if (this.require.mouseDpi && !this.result.mouseDpi) {
-      this.embed.fields('Mouse DPI', 'None provided')
-      this.error = true;
-    } else if (this.triggered.mouseDpi) {
-      this.embed.fields('Mouse DPI', this.result.mouseDpi)
-    }
-
-    if (this.require.sensitivity && !this.result.sensitivity) {
-      this.embed.fields('Sensitivity', 'None provided')
-      this.error = true;
-    } else if (this.triggered.sensitivity) {
-      this.embed.fields('Sensitivity', this.result.sensitivity)
-    }
-
-    if(this.error) {
-      this.embed.send()
-      this.result.error = true;
-    }
-    return this
-  }
 }

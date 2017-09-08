@@ -1,18 +1,18 @@
 import 'babel-polyfill';
 import Bluebird from 'bluebird';
+import chalk from 'chalk';
 global.Promise = Bluebird;
 
 import bot from './src/bot';
 import db from './src/db';
 
-console.log();
-console.log('            _ _               _      ');
-console.log('/\\   /\\__ _| | | ___   _ _ __(_) ___ ');
-console.log('\\ \\ / / _` | | |/ / | | | \'__| |/ _ \\');
-console.log(' \\ V / (_| | |   <| |_| | |  | |  __/');
-console.log('  \\_/ \\__,_|_|_|\\_\\___, |_|  |_|\\___|');
-console.log('  Discord Stats Bot|___/             ');
-console.log();
+console.log(chalk.hex('#f04747')(`
+               _ _               _         \r
+   /\\   /\\__ _| | | ___   _ _ __(_) ___    \r
+   \\ \\ / / _\` | | |/ / | | | \'__| |/ _ \\   \r
+    \\ V / (_| | |   <| |_| | |  | |  __/   \r
+     \\_/ \\__,_|_|_|\\_,\\__, |_|  |_|\\___|   \r
+      ${chalk.hex('#FFFFFF').underline('Discord Stats Bot')}|___/               \n`));
 
 Promise.resolve()
   .then(db.connect)
