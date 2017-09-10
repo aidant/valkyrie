@@ -6,13 +6,14 @@ global.Promise = Bluebird;
 import bot from './src/bot';
 import db from './src/db';
 
-console.log(chalk.hex('#f04747')(`
-               _ _               _         \r
-   /\\   /\\__ _| | | ___   _ _ __(_) ___    \r
-   \\ \\ / / _\` | | |/ / | | | \'__| |/ _ \\   \r
-    \\ V / (_| | |   <| |_| | |  | |  __/   \r
-     \\_/ \\__,_|_|_|\\_,\\__, |_|  |_|\\___|   \r
-      ${chalk.hex('#FFFFFF').underline('Discord Stats Bot')}|___/               \n`));
+console.log(chalk`
+{red                  _ _               _
+     /\\   /\\__ _| | | ___   _ _ __(_) ___
+     \\ \\ / / _\` | | |/ / | | | \'__| |/ _ \\
+      \\ V / (_| | |   <| |_| | |  | |  __/
+       \\_/ \\__,_|_|_|\\_,\\__, |_|  |_|\\___|}
+       {reset.underline Discord Stats Bot}{red |___/}
+`)
 
 Promise.resolve()
   .then(db.connect)

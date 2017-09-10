@@ -48,11 +48,11 @@ export default async function (border, star, hero, rank) {
 function getImage(url) {
   return new Promise((resolve, reject) => {
 
-    if (Joi.validate(url, Joi.string().uri()).error != null) {
+    if (!url || Joi.validate(url, Joi.string().uri()).error != null) {
       resolve(null);
       return;
     }
-
+    
     const file = path.join(__dirname, '..', 'img', path.parse(url).base);
     if (fs.existsSync(file)) {
       resolve(file);
