@@ -28,11 +28,22 @@ export default {
     if (params.error) return;
     message.typing.start()
 
+    let account, err;
     try {
-      let account = await rp({
+      account = await rp({
         uri: encodeURI(`${settings.apiURL}/api/v1/profile/${input.accountTag.replace('#', '~')}/${input.region || ''}`),
         json: true
       })
+    } catch (e) {
+      err = e;
+      console.error(e)
+      params.embed
+        .color(15746887)
+        .description('No Account found. Please verify you entered the correct information. \n*Accounts are case sensitive.*')
+        .send()
+      message.typing.stop()
+    }
+    if (err) return;
       let image = await profile(
         account.images.portrait.border,
         account.images.portrait.star,
@@ -47,14 +58,6 @@ export default {
         .send(false)
       message.typing.stop()
 
-    } catch (e) {
-      console.error(e)
-      params.embed
-        .color(15746887)
-        .description('Failed to find an account.')
-        .send()
-      message.typing.stop()
-    }
   },
   async help(context, message) {
   let embed = message.embed();
