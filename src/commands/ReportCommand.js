@@ -1,30 +1,30 @@
-import Discord from 'discord.js';
+import Discord from 'discord.js'
 import Embed from '../utils/embed'
-import settings from '../../config/env';
+import settings from '../../config/env'
 
-const hook = new Discord.WebhookClient(settings.webhookClientId, settings.webhookToken);
+const hook = new Discord.WebhookClient(settings.webhookClientId, settings.webhookToken)
 
 export default {
   command: ['report'],
   helpShort: 'Report issues, bugs or feature requests.',
 
-  async handler(context, message) {
-    hook.embed = () => { return new Embed(hook); };
+  async handler (context, message) {
+    hook.embed = () => { return new Embed(hook) }
 
-    if(context.params.length < 1) {
+    if (context.params.length < 1) {
       this.help(context, message)
-      return;
+      return
     }
 
-    let channel = `<#${message.channel.id}>`;
+    let channel = `<#${message.channel.id}>`
     let links = `<@${message.author.id}>`
-    if(message.channel.type === 'text') {
+    if (message.channel.type === 'text') {
       channel = `#${message.channel.name} - ${message.guild.name}`
       links = `<#${message.channel.id}>\n<@${message.author.id}>`
     }
-    let db = '';
+    let db = ''
     if (context.user) {
-      db = [];
+      db = []
       db.push(`Account: ${context.user.accountTag}`)
       db.push(`Region: ${context.user.region}`)
       db.push(`Hidden: ${context.user.isAccountTagHidden}`)
@@ -54,12 +54,11 @@ export default {
           .description('Failed to send message.')
           .send()
       })
-
   },
-  async help(context, message) {
+  async help (context, message) {
     message.embed()
       .description('Please include a small summary of your issue.')
       .fields('Example:', `\`${settings.activator} report No stats are shown for my battleTag, Tracer#3939.\``)
       .send()
   }
-};
+}

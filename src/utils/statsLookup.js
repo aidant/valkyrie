@@ -1,4 +1,4 @@
-const best = {};
+const best = {}
 
 best.dps = [
   { stat: 'eliminations_most_in_game', name: 'Eliminations' },
@@ -56,7 +56,7 @@ best.stats = {
   ],
   'sombra': [
     ...best.dps,
-    { stat: 'enemies_empd_most_in_game', name: 'Enemies Emp\'d'},
+    { stat: 'enemies_empd_most_in_game', name: 'Enemies Emp\'d' },
     { stat: 'enemies_hacked_most_in_game', name: 'Enemies Hacked' }
   ],
   'tracer': [
@@ -111,7 +111,7 @@ best.stats = {
   'orisa': [
     ...best.tank,
     { stat: 'damage_blocked_most_in_game', name: 'Damage Blocked' },
-    { stat: 'damage_amplified_most_in_game', name: 'Damage Amped' },
+    { stat: 'damage_amplified_most_in_game', name: 'Damage Amped' }
   ],
   'reinhardt': [
     ...best.tank,
@@ -122,7 +122,7 @@ best.stats = {
     ...best.tank,
     { stat: 'whole_hog_kills_most_in_game', name: 'Whole Hog Kills' },
     { stat: 'enemies_hooked_most_in_game', name: 'Enemies Hooked' },
-    { stat: 'self_healing_most_in_game', name: 'Self Healing' },
+    { stat: 'self_healing_most_in_game', name: 'Self Healing' }
   ],
   'winston': [
     ...best.tank,
@@ -135,7 +135,7 @@ best.stats = {
     ...best.tank,
     { stat: 'high_energy_kills_most_in_game', name: 'High Energy Kills' },
     { stat: 'graviton_surge_kills_most_in_game', name: 'Graviton Kills' },
-    { stat: 'damage_blocked_most_in_game', name: 'Damage Blocked' },
+    { stat: 'damage_blocked_most_in_game', name: 'Damage Blocked' }
   ],
   'ana': [
     { stat: 'eliminations_most_in_game', name: 'Eliminations' },
@@ -177,11 +177,11 @@ best.stats = {
   ]
 }
 
-export function careerBest(name) {
-  return best.stats[name];
+export function careerBest (name) {
+  return best.stats[name]
 };
 
-const average = {};
+const average = {}
 
 average.dps = [
   { stat: 'eliminations', name: 'Eliminations' },
@@ -229,7 +229,7 @@ average.stats = {
   ],
   'sombra': [
     ...average.dps,
-    { stat: 'enemies_empd', name: 'Enemies Emp\'d'},
+    { stat: 'enemies_empd', name: 'Enemies Emp\'d' },
     { stat: 'enemies_hacked', name: 'Enemies Hacked' }
   ],
   'tracer': [
@@ -284,7 +284,7 @@ average.stats = {
   'orisa': [
     ...average.tank,
     { stat: 'damage_blocked', name: 'Damage Blocked' },
-    { stat: 'damage_amplified', name: 'Damage Amped' },
+    { stat: 'damage_amplified', name: 'Damage Amped' }
   ],
   'reinhardt': [
     ...average.tank,
@@ -295,7 +295,7 @@ average.stats = {
     ...average.tank,
     { stat: 'whole_hog_kills', name: 'Whole Hog Kills' },
     { stat: 'enemies_hooked', name: 'Enemies Hooked' },
-    { stat: 'self_healing', name: 'Self Healing' },
+    { stat: 'self_healing', name: 'Self Healing' }
   ],
   'winston': [
     ...average.tank,
@@ -308,7 +308,7 @@ average.stats = {
     ...average.tank,
     { stat: 'high_energy_kills', name: 'High Energy Kills' },
     { stat: 'graviton_surge_kills', name: 'Graviton Kills' },
-    { stat: 'damage_blocked', name: 'Damage Blocked' },
+    { stat: 'damage_blocked', name: 'Damage Blocked' }
   ],
   'ana': [
     { stat: 'eliminations', name: 'Eliminations' },
@@ -350,6 +350,6 @@ average.stats = {
   ]
 }
 
-export function careerAverage(name) {
-  return average.stats[name];
+export function careerAverage (name) {
+  return average.stats[name]
 };

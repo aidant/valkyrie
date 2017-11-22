@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'joi'
 
 const commandSchema = Joi.object().keys({
   command: Joi.array().items(Joi.string().required()).required(),
@@ -6,70 +6,70 @@ const commandSchema = Joi.object().keys({
   isHidden: Joi.boolean().default(false),
   helpShort: Joi.string(),
   handler: Joi.func(),
-  help: Joi.func(),
-});
+  help: Joi.func()
+})
 
-let report = "Registered Commands:\n";
+let report = 'Registered Commands:\n'
 
 export default class CommandRouter {
-  constructor() {
+  constructor () {
     this.root = {
       name: null,
       path: [],
-      children: {},
-    };
+      children: {}
+    }
   }
 
-  add(descriptor) {
-    descriptor = Joi.attempt(descriptor, commandSchema, "Error while registering command:\n");
+  add (descriptor) {
+    descriptor = Joi.attempt(descriptor, commandSchema, 'Error while registering command:\n')
 
-    let node = this.root;
-    const command = descriptor.command;
+    let node = this.root
+    const command = descriptor.command
 
     command.forEach(token => {
-      token = token.toLowerCase();
+      token = token.toLowerCase()
 
       if (!node.children[token]) {
         node.children[token] = {
           name: token,
           path: node.path.concat(token),
           parent: node,
-          children: {},
-        };
+          children: {}
+        }
       }
 
-      node = node.children[token];
-    });
+      node = node.children[token]
+    })
 
     if (node.handler) {
-      throw new Error("Handler already registered for path '" + descriptor.command + "'");
+      throw new Error("Handler already registered for path '" + descriptor.command + "'")
     }
 
-    report += '\t' + descriptor.command.join(' ') + '\n';
+    report += '\t' + descriptor.command.join(' ') + '\n'
 
-    delete descriptor.command;
+    delete descriptor.command
     Object.assign(node, descriptor)
 
-    return this;
+    return this
   }
 
-  route(message) {
-    let node = this.root;
+  route (message) {
+    let node = this.root
 
     message.some(token => {
-      token = token.toLowerCase();
+      token = token.toLowerCase()
 
       if (!node.children[token]) {
-        return true;
+        return true
       }
 
-      node = node.children[token];
-    });
+      node = node.children[token]
+    })
 
-    return Object.assign({}, node);
+    return Object.assign({}, node)
   }
 
-  report() {
-    console.log(report);
+  report () {
+    console.log(report)
   }
 }

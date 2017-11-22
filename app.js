@@ -1,10 +1,7 @@
-import 'babel-polyfill';
-import Bluebird from 'bluebird';
-import chalk from 'chalk';
-global.Promise = Bluebird;
-
-import bot from './src/bot';
-import db from './src/db';
+import 'babel-polyfill'
+import chalk from 'chalk'
+import bot from './src/bot'
+import db from './src/db'
 
 console.log(chalk`
 {red                  _ _               _

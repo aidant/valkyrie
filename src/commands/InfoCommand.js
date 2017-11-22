@@ -1,12 +1,12 @@
-import settings from '../../config/env';
-import moment from 'moment';
-import discordJsPackageInfo from 'discord.js/package';
+import settings from '../../config/env'
+import moment from 'moment'
+import discordJsPackageInfo from 'discord.js/package'
 
 export default {
   command: ['info'],
   helpShort: `Information and statistics about ${settings.name}.`,
 
-  async handler(context, message, client) {
+  async handler (context, message, client) {
     message.embed()
       .author(settings.name, 'https://github.com/AidanT/Valkyrie')
       .fields('Node Uptime', moment.duration(process.uptime(), 'seconds').humanize())
@@ -18,4 +18,4 @@ export default {
       .footer()
       .send()
   }
-};
+}

@@ -1,16 +1,15 @@
-import Params from '../utils/params';
-import settings from '../../config/env';
-import User from '../schema/User';
+import Params from '../utils/params'
+import settings from '../../config/env'
 
-function calcSensitivityInCm(dpi, sense) {
-  const conv = 2.54 * 10 / 3;
-  return 360 * conv / (sense * dpi * 0.022);
+function calcSensitivityInCm (dpi, sense) {
+  const conv = 2.54 * 10 / 3
+  return 360 * conv / (sense * dpi * 0.022)
 }
 
 export default {
   command: ['sense'],
   helpShort: 'Display your sensitivity settings.',
-  async handler(context, message) {
+  async handler (context, message) {
     let params = await Params(context, message, {
       sensitivity: {
         required: true
@@ -22,10 +21,10 @@ export default {
       mentions: true
     })
     console.log(params)
-    if (params.error) { return; };
+    if (params.error) { return };
     let input = params.result
 
-    const cm360 = calcSensitivityInCm(input.mouseDpi, input.sensitivity).toFixed(3);
+    const cm360 = calcSensitivityInCm(input.mouseDpi, input.sensitivity).toFixed(3)
 
     message.embed()
       .color()
@@ -36,10 +35,10 @@ export default {
       .fields('CM/360', cm360)
       .send()
   },
-  async help(context, message) {
-    let embed = message.embed();
+  async help (context, message) {
+    let embed = message.embed()
 
-    if(!context.user || (!context.user.mouseDpi || !context.user.sensitivity)) {
+    if (!context.user || (!context.user.mouseDpi || !context.user.sensitivity)) {
       embed.description(`Tip: Save your information with \`${settings.activator} save\``)
     }
 
@@ -48,4 +47,4 @@ export default {
       .fields('Sensitivity', 'Example: `sense 7.5`')
       .send()
   }
-};
+}

@@ -1,53 +1,53 @@
-import { Document, ValidationError } from 'camo';
+import { Document } from 'camo'
 
 export default class User extends Document {
-  constructor() {
-    super();
+  constructor () {
+    super()
 
     this.createdAt = {
       type: Date,
       default: Date.now,
-      required: true,
-    };
+      required: true
+    }
 
     this.discordId = {
       type: String,
       unique: true,
-      required: true,
-    };
+      required: true
+    }
 
     this.accountTag = {
-      type: String,
-    };
+      type: String
+    }
 
     this.isAccountTagHidden = {
       type: Boolean,
-      default: false,
-    };
+      default: false
+    }
 
     this.region = {
       type: String,
-      choices: ['eu', 'us', 'kr', 'psn', 'xbl', undefined],
-    };
+      choices: ['eu', 'us', 'kr', 'psn', 'xbl', undefined]
+    }
 
     this.mouseDpi = {
-      type: Number,
-    };
+      type: Number
+    }
 
     this.sensitivity = {
-      type: Number,
-    };
+      type: Number
+    }
 
     this.gamemode = {
       type: String,
-      choices: ['quickplay', 'competitive', undefined],
-    };
+      choices: ['quickplay', 'competitive', undefined]
+    }
   }
 
-  static collectionName() {
-    return 'users';
+  static collectionName () {
+    return 'users'
   }
 
-  postValidate() {
+  postValidate () {
   }
 }

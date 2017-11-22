@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'joi'
 
 export const regex = {
   battleTag: /\b([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12})(#[0-9]{4,6})(?=\s|$)/g,
@@ -12,40 +12,40 @@ export const regex = {
   mouseDpi: /\b(d|c)pi ([0-9]{1,5}|[0-9]{1,2},[0-9]{2,3})(?=\s|$)/ig
 }
 
-export const accountTag = Joi.alternatives().try(battleTag(), onlineID(), gamerTag());
+export const accountTag = Joi.alternatives().try(battleTag(), onlineID(), gamerTag())
 
-export function discordID() {
-  return Joi.string().regex(regex.discordID);
+export function discordID () {
+  return Joi.string().regex(regex.discordID)
 }
 
-export function region() {
-  return Joi.string().regex(regex.region);
+export function region () {
+  return Joi.string().regex(regex.region)
 }
 
-export function battleTag() {
-  return Joi.string().regex(regex.battleTag);
+export function battleTag () {
+  return Joi.string().regex(regex.battleTag)
 }
 
-export function onlineID() {
-  return Joi.string().regex(regex.onlineID);
+export function onlineID () {
+  return Joi.string().regex(regex.onlineID)
 }
 
-export function gamerTag() {
-  return Joi.string().regex(regex.gamerTag);
+export function gamerTag () {
+  return Joi.string().regex(regex.gamerTag)
 }
 
-export function hero() {
-  return Joi.string().regex(regex.hero);
+export function hero () {
+  return Joi.string().regex(regex.hero)
 }
 
-export function gamemode() {
-  return Joi.string().regex(regex.gamemode);
+export function gamemode () {
+  return Joi.string().regex(regex.gamemode)
 }
 
-export function mouseDpi() {
-  return Joi.string().regex(regex.mouseDpi);
+export function mouseDpi () {
+  return Joi.string().regex(regex.mouseDpi)
 }
 
-export function sensitivity() {
-  return Joi.string().regex(regex.sensitivity);
+export function sensitivity () {
+  return Joi.string().regex(regex.sensitivity)
 }

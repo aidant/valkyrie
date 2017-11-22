@@ -1,16 +1,16 @@
 const COLOR = {
-    'default': '15746887',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png': '10635553',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-2.png': '10263708',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-3.png': '14796130',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-4.png': '12439245',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-5.png': '5924807',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-6.png': '16170069',
-    'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-7.png': '16777215'
- };
+  'default': '15746887',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png': '10635553',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-2.png': '10263708',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-3.png': '14796130',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-4.png': '12439245',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-5.png': '5924807',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-6.png': '16170069',
+  'https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-7.png': '16777215'
+}
 
-export function color(color) {
-  return COLOR[color];
+export function color (color) {
+  return COLOR[color]
 };
 
 const HEROES = {
@@ -43,8 +43,8 @@ const HEROES = {
 
 }
 
-export function heroName(hero) {
-  return HEROES[hero];
+export function heroName (hero) {
+  return HEROES[hero]
 }
 
 const gamemodes = {
@@ -52,8 +52,8 @@ const gamemodes = {
   'competitive': 'Competitive'
 }
 
-export function gamemode(gamemode) {
-  return gamemodes[gamemode];
+export function gamemode (gamemode) {
+  return gamemodes[gamemode]
 }
 
 const regions = {
@@ -64,13 +64,13 @@ const regions = {
   'xbl': 'Xbox'
 }
 
-export function region(region) {
-  return regions[region];
+export function region (region) {
+  return regions[region]
 }
 
-export function number(num) {
-  if (num === undefined) return;
-  let parts = num.toString().split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
+export function number (num) {
+  if (num === undefined) return
+  let parts = num.toString().split('.')
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return parts.join('.')
 }
