@@ -102,6 +102,8 @@ client.on('message', async message => {
     })
 })
 
+client.on('error', console.error)
+
 if (!settings.token) {
   console.error('Please configure a discord login token.')
   process.exit(1)
