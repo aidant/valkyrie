@@ -38,6 +38,7 @@ const HEROES = {
   'ana': 'Ana',
   'lucio': 'Lúcio',
   'mercy': 'Mercy',
+  'moira': 'Moira',
   'symmetra': 'Symmetra',
   'zenyatta': 'Zenyatta'
 

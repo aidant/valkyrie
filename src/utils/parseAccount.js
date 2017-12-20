@@ -60,19 +60,19 @@ export function careerBest (account, gamemode, hero) {
   return result.join('\n')
 }
 
-export function careerAverage (account, gamemode, hero) {
-  let result = []
-  let stats = slurp.careerAverage(hero)
-  stats.forEach((val, i, obj) => {
-    let tmp = {}
-    tmp.stat = _.find(account.career_stats, { gamemode, hero, stat: val.stat }) || { value: 0 }
-    tmp.time = _.find(account.career_stats, { gamemode, hero, stat: 'time_played_seconds' }) || { value: 0 }
-
-    tmp.number = Math.round(tmp.stat.value / tmp.time.value * 60 * 10)
-    result.push(`${val.name}: **${humanize({ value: tmp.number, stat: val.stat })}**`)
-  })
-  return result.join('\n')
-}
+// export function careerAverage (account, gamemode, hero) {
+//   let result = []
+//   let stats = slurp.careerAverage(hero)
+//   stats.forEach((val, i, obj) => {
+//     let tmp = {}
+//     tmp.stat = _.find(account.career_stats, { gamemode, hero, stat: val.stat }) || { value: 0 }
+//     tmp.time = _.find(account.career_stats, { gamemode, hero, stat: 'time_played_seconds' }) || { value: 0 }
+//
+//     tmp.number = Math.round(tmp.stat.value / tmp.time.value * 60 * 10)
+//     result.push(`${val.name}: **${humanize({ value: tmp.number, stat: val.stat })}**`)
+//   })
+//   return result.join('\n')
+// }
 
 export function humanize (obj) {
   let time = /seconds$/.test(obj.stat)
