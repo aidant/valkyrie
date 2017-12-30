@@ -1,7 +1,23 @@
 import Joi from 'joi'
 
+const common = 'a-zA-Z0-9'
+const battleTagTypes = [
+  // Chinese
+  `[${common}\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]{2,8}`,
+  // Cyrillic
+  `[${common}\u0400-\u04ff\u0500-\u052f]{3,12}`,
+  // Japanese
+  `[${common}\u3000-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF]{2,8}`,
+  // Korean
+  `[${common}\uac00-\ud7af]{2,8}`,
+  // Latin
+  `[${common}\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u017e\u0180-\u0188\u0190-\u0198\u01c0-\u0217]{3,12}`,
+  // Thai
+  `[${common}\u0E00-\u0E7F]{2,8}`
+].join('|')
+
 export const regex = {
-  battleTag: /\b([a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u0217]{1}[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017E\u0180-\u0188\u01C0-\u02170-9]{2,12})(#[0-9]{4,6})(?=\s|$)/g,
+  battleTag: new RegExp(`(?<=\\s|^)(?![0-9])(${battleTagTypes})#([0-9]{4,6})(?=\\s|$)`, 'g'),
   onlineID: /\b([a-zA-Z]{1}[a-zA-Z0-9_-]{2,15})(?=\s|$)/g,
   gamerTag: /\b[a-zA-Z]{1}([a-zA-Z0-9 ]{0,13}[a-zA-Z]{1})?(?=\s|$)/g,
   hero: /\b(doomfist|genji|mccree|pharah|reaper|soldier:? ?(76)?|sombra|tracer|bastion|hanzo|junk(rat)?|mei|torb(j(o|\u00F6)rn)?|widow(maker)?|d\.?va|orisa|rein(hardt)?|roadhog|winston|zarya|ana|l(u|\u00FA)cio|mercy|sym(metra)?|zen(yatta)?|moira)(?=\s|$)/ig,
