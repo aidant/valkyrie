@@ -103,6 +103,8 @@ export default async function (context, message, options) {
           .replace(/^widow$/, 'widowmaker')
           .replace(/^sym$/, 'symmetra')
           .replace(/^junk$/, 'junkrat')
+          .replace(/^moth$/, 'mercy')
+          .replace(/^bagel$/, 'brigitte')
       })
     }
   }
