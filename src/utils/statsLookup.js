@@ -176,11 +176,11 @@ best.stats = {
     { stat: 'eliminations_most_in_game', name: 'Eliminations' },
     { stat: 'kill_streak_best', name: 'Kill Streak' },
     { stat: 'all_damage_done_most_in_game', name: 'All Damage Done' },
-    { stat: 'healing_done_most_in_game', name: 'Healing Done' },
+    // { stat: 'healing_done_most_in_game', name: 'Healing Done' },
     { stat: 'armor_provided_most_in_game', name: 'Armor Provided' },
     { stat: 'damage_blocked_most_in_game', name: 'Damage Blocked' },
-    { stat: 'defensive_assists_most_in_game', name: 'Assists Defense' },
-    { stat: 'offensive_assists_most_in_game', name: 'Assists Offense' }
+    // { stat: 'defensive_assists_most_in_game', name: 'Assists Defense' },
+    // { stat: 'offensive_assists_most_in_game', name: 'Assists Offense' }
   ],
   symmetra: [
     ...best.dps,
