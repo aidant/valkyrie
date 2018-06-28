@@ -37,10 +37,17 @@ export default {
     } catch (e) {
       err = e
       console.error(e)
-      params.embed
-        .color(15746887)
-        .description('No Account found. Please verify you entered the correct information. \n*Accounts are case sensitive.*')
-        .send()
+      if (e.statusCode === 401) {
+        params.embed
+          .color(15746887)
+          .description('This account is private, privacy settings can be changed in game.')
+          .send()
+      } else {
+        params.embed
+          .color(15746887)
+          .description('No Account found. Please verify you entered the correct information. \n*Accounts are case sensitive.*')
+          .send()
+      }
       message.typing.stop()
     }
     if (err) return
